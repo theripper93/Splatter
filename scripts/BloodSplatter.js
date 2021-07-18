@@ -174,6 +174,7 @@ class BloodSplatter {
   }
 
   static belowTreshold(actor) {
+    if(!actor) return false;
     const hpMax = BloodSplatter.getHpMax(actor.data);
     const hpVal = BloodSplatter.getHpVal(actor.data);
     if (
