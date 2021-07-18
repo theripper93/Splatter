@@ -6,13 +6,28 @@ Hooks.once("init", function () {
   game.settings.register("splatter", "enableBloodsplatter", {
     name: game.i18n.localize("splatter.settings.enableBloodsplatter.text"),
     hint: game.i18n.localize("splatter.settings.enableBloodsplatter.hint"),
-    scope: "world",
+    scope: "client",
     config: true,
     type: Boolean,
     default: true,
     onChange: function (sett) {
       if (!sett && canvas.background.BloodSplatter) {
         canvas.background.BloodSplatter.Destroy();
+      }
+      if (!sett) {
+        libWrapper.unregister(
+          "splatter",
+          "Token.prototype._onMovementFrame",
+          false
+        );
+      } else {
+      if(game.settings.get("splatter", "enableBloodTrail")){
+        libWrapper.register(
+          "splatter",
+          "Token.prototype._onMovementFrame",
+          BloodSplatter.bloodTrail
+        );
+      }
       }
     },
   });
@@ -58,7 +73,7 @@ Hooks.once("init", function () {
     type: Boolean,
     default: false,
     onChange: function (sett) {
-      if (sett) {
+      if (sett && game.settings.get("splatter", "enableBloodsplatter")) {
         libWrapper.register(
           "splatter",
           "Token.prototype._onMovementFrame",
@@ -74,7 +89,7 @@ Hooks.once("init", function () {
     },
   });
 
-  if (game.settings.get("splatter", "enableBloodTrail") === true) {
+  if (game.settings.get("splatter", "enableBloodTrail") === true && game.settings.get("splatter", "enableBloodsplatter")===true) {
     libWrapper.register(
       "splatter",
       "Token.prototype._onMovementFrame",

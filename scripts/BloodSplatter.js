@@ -154,6 +154,7 @@ class BloodSplatter {
   }
 
   static socketSplatFn(tokenIds) {
+    if(!game.settings.get("splatter", "enableBloodsplatter")) return
     for (let tokenId of tokenIds) {
       let token = canvas.tokens.get(tokenId);
       if (!token) return;
