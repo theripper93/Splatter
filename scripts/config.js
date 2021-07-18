@@ -134,6 +134,20 @@ Hooks.once("init", function () {
     },
   });
 
+  game.settings.register("splatter", "onlyInCombat", {
+    name: game.i18n.localize("splatter.settings.onlyInCombat.text"),
+    hint: game.i18n.localize("splatter.settings.onlyInCombat.hint"),
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: function () {
+      if (canvas.background.BloodSplatter) {
+        canvas.background.BloodSplatter.Update();
+      }
+    },
+  });
+
   game.settings.register("splatter", "creatureType", {
     name: game.i18n.localize("splatter.settings.creatureType.text"),
     hint: game.i18n.localize("splatter.settings.creatureType.hint"),
