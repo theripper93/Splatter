@@ -17,6 +17,25 @@ Hooks.once("init", function () {
     },
   });
 
+  game.settings.register("splatter", "violence", {
+    name: game.i18n.localize("splatter.settings.violence.text"),
+    hint: game.i18n.localize("splatter.settings.violence.hint"),
+    scope: "world",
+    config: true,
+    type: Number,
+    range: {
+      min: 1,
+      max: 10,
+      step: 1,
+    },
+    default: 1,
+    onChange: function () {
+      if (canvas.background.BloodSplatter) {
+        canvas.background.BloodSplatter.Update();
+      }
+    },
+  });
+
   game.settings.register("splatter", "enableBloodTrail", {
     name: game.i18n.localize("splatter.settings.enableBloodTrail.text"),
     hint: game.i18n.localize("splatter.settings.enableBloodTrail.hint"),

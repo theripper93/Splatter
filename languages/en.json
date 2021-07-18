@@ -20,6 +20,8 @@
     "splatter.settings.creatureTypeCustom.hint":"Data path for an actor's custom creature type",
     "splatter.settings.enableBloodTrail.text":"Blood Trail",
     "splatter.settings.enableBloodTrail.hint":"Display a trail of blood behind the token",
+    "splatter.settings.violence.text":"Violence Level",
+    "splatter.settings.violence.hint":"Set how much blood to show and how frequent blood trails are",
 
     "splatter.controls.clearBlood.name":"Clear Blood",
     "splatter.controls.splatToken.name":"Bloodsplat Token",

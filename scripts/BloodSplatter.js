@@ -9,6 +9,7 @@ class BloodSplatter {
     this.alpha = colorData?.alpha;
     this.bloodSheet = game.settings.get("splatter", "useBloodsheet");
     this.bloodSheetData = game.settings.get("splatter", "BloodSheetData");
+    this.violence = game.settings.get("splatter", "violence");
     this.scaleMulti =
       (canvas.dimensions.size / 100) *
       game.settings.get("splatter", "bloodsplatterScale");
@@ -33,7 +34,7 @@ class BloodSplatter {
     this.blood.addChild(sprite);
   }
 
-  SplatFromToken(token, extraScale = 1) {
+  SplatFromToken(token, { extraScale = 1, isTrail = false }) {
     const colorFlag = token.data.flags.splatter?.bloodColor;
     let colorData = {};
     if (!colorFlag && this.bloodSheet) {
@@ -43,14 +44,18 @@ class BloodSplatter {
     if (colorFlag) {
       colorData = this.ColorStringToHexAlpha(colorFlag);
     }
-    this.Splat(
-      token.center,
-      token.data.scale *
-        Math.max(token.data.width, token.data.height) *
-        extraScale,
-      colorData?.color,
-      colorData?.alpha
-    );
+    const splatScale = token.data.scale *
+    Math.max(token.data.width, token.data.height) *
+    extraScale
+    const violence = isTrail ? 1 : this.violence;
+    for (let i = 0; i < violence; i++) {
+      this.Splat(
+        token.center,
+        splatScale,
+        colorData?.color,
+        colorData?.alpha
+      );
+    }
   }
 
   Destroy() {
@@ -66,6 +71,7 @@ class BloodSplatter {
     this.alpha = colorData?.alpha;
     this.bloodSheet = game.settings.get("splatter", "useBloodsheet");
     this.bloodSheetData = game.settings.get("splatter", "BloodSheetData");
+    this.violence = game.settings.get("splatter", "violence");
     this.scaleMulti = game.settings.get("splatter", "bloodsplatterScale");
   }
 
@@ -137,23 +143,22 @@ class BloodSplatter {
   static bloodTrail(wrapped, ...args) {
     if (!this.bleeding) {
       this.bleeding = true;
+      const timeout = canvas.background.BloodSplatter?.violence ? 300-canvas.background.BloodSplatter?.violence*20 : 100;
       setTimeout(() => {
         if (BloodSplatter.belowTreshold(this.actor)) {
           if (canvas.background.BloodSplatter) {
-            canvas.background.BloodSplatter.SplatFromToken(
-              this,
-              Math.random() * 0.5
-            );
+            canvas.background.BloodSplatter.SplatFromToken(this, {
+              extraScale: Math.random() * 0.5, isTrail: true,
+            });
           } else {
             new BloodSplatter();
-            canvas.background.BloodSplatter.SplatFromToken(
-              this,
-              Math.random() * 0.5
-            );
+            canvas.background.BloodSplatter.SplatFromToken(this, {
+              extraScale: Math.random() * 0.5, isTrail: true,
+            });
           }
         }
         this.bleeding = false;
-      }, 100);
+      }, timeout);
     }
     return wrapped(...args);
   }
@@ -166,7 +171,7 @@ Hooks.once("socketlib.ready", () => {
   BloodSplatterSocket.register("Splat", BloodSplatter.socketSplatFn);
 });
 
-Hooks.on("updateActor", async function (actor, updates) {
+Hooks.on("preUpdateActor", function (actor, updates) {
   if (!game.settings.get("splatter", "enableBloodsplatter")) return;
   let token = actor.parent
     ? canvas.tokens.get(actor.parent.id)
@@ -174,6 +179,9 @@ Hooks.on("updateActor", async function (actor, updates) {
   const hpMax = BloodSplatter.getHpMax(actor.data);
   const oldHpVal = BloodSplatter.getHpVal(actor.data);
   const hpVal = BloodSplatter.getHpVal(updates);
+  console.log(oldHpVal, hpVal, hpMax);
+  const impactScale = (oldHpVal - hpVal) / hpMax + 0.7;
+  console.log(impactScale);
   if (
     hpVal != undefined &&
     hpVal <= oldHpVal &&
@@ -182,9 +190,13 @@ Hooks.on("updateActor", async function (actor, updates) {
   ) {
     if (!canvas.background.BloodSplatter) {
       new BloodSplatter();
-      canvas.background.BloodSplatter.SplatFromToken(token);
+      canvas.background.BloodSplatter.SplatFromToken(token, {
+        extraScale: impactScale,
+      });
     } else {
-      canvas.background.BloodSplatter.SplatFromToken(token);
+      canvas.background.BloodSplatter.SplatFromToken(token, {
+        extraScale: impactScale,
+      });
     }
   }
 });
