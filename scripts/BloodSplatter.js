@@ -124,6 +124,7 @@ class BloodSplatter {
 
   static bloodTrail(wrapped, ...args) {
     if (
+      this.actor &&
       !this.bleeding &&
       (!canvas.background.BloodSplatter?.inCombat ||
         (canvas.background.BloodSplatter?.inCombat && game.combat?.started))
