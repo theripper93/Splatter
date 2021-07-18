@@ -5,7 +5,7 @@
 ### Bood on hit
 The bigger the hit, the more the blood
 
-![image](https://user-images.githubusercontent.com/1346839/126053219-fe52f8b8-3203-46c0-a7df-26d4a235f388.png | width=100)
+<img src="https://user-images.githubusercontent.com/1346839/126053219-fe52f8b8-3203-46c0-a7df-26d4a235f388.png" width="400" height="100">
 
 
 ### Bood on hit
