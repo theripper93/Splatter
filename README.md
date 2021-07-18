@@ -28,8 +28,6 @@ Set the data path of relevant data to adjust Splatter for your game system
 
 **Blood and guts exists, why make a new one?:** Blood and guts was a massive project and while it was amazing, with a lot of code comes a lot of issues and it's extremely difficult to mantain and fix. This implementation is simpler and more streamlined, and while it has less features, it will be much easier to mantain and adopt if it ever gets abandoned
 
-**Blood goes through walls!**: Yes, it does
-
 ## Licensing
 
 The included Splatter font was created by [Codin Repsh]( https://www.dafont.com/profile.php?user=362757)
