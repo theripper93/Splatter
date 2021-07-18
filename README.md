@@ -25,6 +25,9 @@ Set the data path of relevant data to adjust Splatter for your game system
 
 <img src="https://user-images.githubusercontent.com/1346839/126053301-2f71e412-660b-4afb-b0ef-cc0f9de5e8af.png" width="400">
 
+## NOTICE: FEATURE REQUESTS
+
+I know that this implementation doesen't have all the features BnG had BUT i feel like it has enough customization for most people. Because the point of this module is to keep it streamlined to avoid making it impossible to mantain no feature requests will be implemented. Unless is something that all the users of this module would greatly benfit from, please refrain from asking. Thanks for your understanding :)
 
 ## FAQ
 
