@@ -10,6 +10,7 @@ class BloodSplatter {
     this.bloodSheet = game.settings.get("splatter", "useBloodsheet");
     this.bloodSheetData = game.settings.get("splatter", "BloodSheetData");
     this.violence = game.settings.get("splatter", "violence");
+    this.wallsBlock = game.settings.get("splatter", "wallsBlockBlood")
     this.scaleMulti =
       (canvas.dimensions.size / 100) *
       game.settings.get("splatter", "bloodsplatterScale");
@@ -17,13 +18,13 @@ class BloodSplatter {
     canvas.background.BloodSplatter = this;
   }
 
-  Splat(position, scale, color, alpha) {
+  Splat(scale, color, alpha) {
     let scaleRandom = 0.8 + Math.random() * 0.4;
-    let sprite = new PIXI.Sprite.from(
+    let cachedTex = PIXI.utils.TextureCache[`modules/splatter/bloodsplats/blood${Math.floor(Math.random() * 26)}.svg`]
+    let sprite = cachedTex ? new PIXI.Sprite.from(cachedTex) : new PIXI.Sprite.from(
       `modules/splatter/bloodsplats/blood${Math.floor(Math.random() * 26)}.svg`
     );
     sprite.anchor.set(0.5, 0.5);
-    sprite.position.set(position.x, position.y);
     sprite.scale.set(
       scale * this.scaleMulti * scaleRandom,
       scale * this.scaleMulti * scaleRandom
@@ -31,10 +32,10 @@ class BloodSplatter {
     sprite.alpha = alpha ?? this.alpha;
     sprite.tint = color || this.color;
     sprite.rotation = Math.random() * Math.PI * 2;
-    this.blood.addChild(sprite);
+    return sprite;
   }
 
-  SplatFromToken(token, { extraScale = 1, isTrail = false }) {
+  SplatFromToken(token, { extraScale = 1, isTrail = false } = {}) {
     const colorFlag = token.data.flags.splatter?.bloodColor;
     let colorData = {};
     if (!colorFlag && this.bloodSheet) {
@@ -48,14 +49,28 @@ class BloodSplatter {
     Math.max(token.data.width, token.data.height) *
     extraScale
     const violence = isTrail ? 1 : this.violence;
+    let splatContainer = new PIXI.Container();
+    splatContainer.x=token.center.x
+    splatContainer.y=token.center.y
     for (let i = 0; i < violence; i++) {
-      this.Splat(
-        token.center,
+      splatContainer.addChild(this.Splat(
         splatScale,
         colorData?.color,
         colorData?.alpha
-      );
+      ));
     }
+    if(this.wallsBlock){
+      const maxDimension = Math.max(splatContainer.width,splatContainer.height);
+      const radius = maxDimension > 10 ? maxDimension : 1000; 
+      const tokenMaxDim = Math.max(token.data.width, token.data.height);
+      if(radius >= tokenMaxDim){
+      let mask = BloodSplatter.getMask(token.center,radius)
+      splatContainer.addChild(mask)
+      splatContainer.mask = mask
+      }
+    }
+    this.blood.addChild(splatContainer);
+    
   }
 
   Destroy() {
@@ -73,6 +88,7 @@ class BloodSplatter {
     this.bloodSheetData = game.settings.get("splatter", "BloodSheetData");
     this.violence = game.settings.get("splatter", "violence");
     this.scaleMulti = game.settings.get("splatter", "bloodsplatterScale");
+    this.wallsBlock = game.settings.get("splatter", "wallsBlockBlood")
   }
 
   ColorStringToHexAlpha(colorString) {
@@ -116,6 +132,18 @@ class BloodSplatter {
     )
       return true;
     return false;
+  }
+
+  static getMask(origin,radius){
+   const { rays, los, fov } = canvas.walls.computePolygon(origin, radius, {type: "movement", density: "12"})
+   let g= new PIXI.Graphics()
+   g.beginFill(0xffffff)
+   g.drawPolygon(fov)
+   g.endFill()
+   g.x-=origin.x
+   g.y-=origin.y
+   g.isMask=true
+   return g
   }
 
   static getHpVal(actorData) {
@@ -179,9 +207,7 @@ Hooks.on("preUpdateActor", function (actor, updates) {
   const hpMax = BloodSplatter.getHpMax(actor.data);
   const oldHpVal = BloodSplatter.getHpVal(actor.data);
   const hpVal = BloodSplatter.getHpVal(updates);
-  console.log(oldHpVal, hpVal, hpMax);
   const impactScale = (oldHpVal - hpVal) / hpMax + 0.7;
-  console.log(impactScale);
   if (
     hpVal != undefined &&
     hpVal <= oldHpVal &&

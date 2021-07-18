@@ -36,6 +36,20 @@ Hooks.once("init", function () {
     },
   });
 
+  game.settings.register("splatter", "wallsBlockBlood", {
+    name: game.i18n.localize("splatter.settings.wallsBlockBlood.text"),
+    hint: game.i18n.localize("splatter.settings.wallsBlockBlood.hint"),
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    onChange: function () {
+      if (canvas.background.BloodSplatter) {
+        canvas.background.BloodSplatter.Update();
+      }
+    },
+  });
+
   game.settings.register("splatter", "enableBloodTrail", {
     name: game.i18n.localize("splatter.settings.enableBloodTrail.text"),
     hint: game.i18n.localize("splatter.settings.enableBloodTrail.hint"),
