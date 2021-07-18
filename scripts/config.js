@@ -107,7 +107,7 @@ Hooks.once("init", function () {
       max: 100,
       step: 1,
     },
-    default: 0,
+    default: 50,
     onChange: function () {
       if (canvas.background.BloodSplatter) {
         canvas.background.BloodSplatter.Update();
