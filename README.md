@@ -26,7 +26,7 @@ Set the data path of relevant data to adjust Splatter for your game system
 
 ## FAQ
 
-**Blood and guts exists, why make a new one?:** Blood and guts was a massive project and with lots of code comes lots of issues and it's extremely difficult to mantain and fix. This implementation is simpler and more streamlined, and while it has less features, it will be much easier to mantain and adopt if it ever gets abandoned
+**Blood and guts exists, why make a new one?:** Blood and guts was a massive project and while it was amazing, with a lot of code comes a lot of issues and it's extremely difficult to mantain and fix. This implementation is simpler and more streamlined, and while it has less features, it will be much easier to mantain and adopt if it ever gets abandoned
 
 **Blood goes through walls!**: Yes, it does
 
