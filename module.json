@@ -1,0 +1,53 @@
+{
+  "name": "splatter",
+  "title": "Splatter",
+  "description": "Blood up your games",
+  "version": "0.1",
+  "authors": [
+      {
+          "name": "theripper93",
+          "email": "tsplab@gmail.com",
+          "url": "https://www.patreon.com/theripper93"
+      }
+  ],
+  "languages": [
+      {
+          "lang": "en",
+          "name": "English",
+          "path": "languages/en.json"
+      }
+  ],
+  "scripts": [
+      "./scripts/main.js",
+      "./scripts/config.js",
+      "./scripts/BloodSplatter.js"
+  ],
+  "styles": [
+  ],
+  "packs": [
+    {
+        "name": "splattermacros",
+        "label": "Splatter Macros",
+        "path": "packs/macros.db",
+        "entity": "Macro",
+        "module": "splatter"
+    }
+  ],
+  "minimumCoreVersion": "0.8.6",
+  "compatibleCoreVersion": "0.8.8",
+  "url": "https://github.com/theripper93/Splatter",
+  "manifest": "https://github.com/theripper93/Splatter/releases/latest/download/module.json",
+  "download": "https://github.com/theripper93/Splatter/releases/latest/download/module.zip",
+  "socket":true,
+  "dependencies": [
+    {
+        "name": "socketlib"
+    },
+    {
+        "name": "colorsettings"
+    },
+    {
+        "name": "lib-wrapper"
+    }
+  ]
+}

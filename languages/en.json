@@ -1,0 +1,29 @@
+{
+    "splatter.settings.enableBloodsplatter.text":"Enable Bloodsplats",
+    "splatter.settings.enableBloodsplatter.hint":"Draw bloodsplat on predefined health percentage thresholds",
+    "splatter.settings.bloodsplatterThreshold.text":"Bloodsplat Threshold",
+    "splatter.settings.bloodsplatterThreshold.hint":"Draw bloodsplats under this health percentage",
+    "splatter.settings.bloodsplatterScale.text":"Bloodsplats scale",
+    "splatter.settings.bloodsplatterScale.hint":"Bloodsplats scale multiplier",
+    "splatter.settings.bloodColor.text":"Blood Color",
+    "splatter.settings.bloodColor.hint":"Color of the bloodsplats",
+    "splatter.settings.bloodColor.label":"Color",
+    "splatter.settings.useBloodsheet.text":"Automatic Blood Color",
+    "splatter.settings.useBloodsheet.hint":"Change blood color depending on creature type",
+    "splatter.settings.currentHp.text":"Current HP",
+    "splatter.settings.currentHp.hint":"Data path for an actor's current hp",
+    "splatter.settings.maxHp.text":"Max HP",
+    "splatter.settings.maxHp.hint":"Data path for an actor's max hp",
+    "splatter.settings.creatureType.text":"Creature Type",
+    "splatter.settings.creatureType.hint":"Data path for an actor's creature type",
+    "splatter.settings.creatureTypeCustom.text":"Custom Creature Type",
+    "splatter.settings.creatureTypeCustom.hint":"Data path for an actor's custom creature type",
+    "splatter.settings.enableBloodTrail.text":"Blood Trail",
+    "splatter.settings.enableBloodTrail.hint":"Display a trail of blood behind the token",
+
+    "splatter.controls.clearBlood.name":"Clear Blood",
+    "splatter.controls.splatToken.name":"Bloodsplat Token",
+    "splatter.controls.splatToken.warn":"Please select one or more tokens",
+
+    "splatter.tokenconfig.bloodColor.name":"Blood Color"
+}
