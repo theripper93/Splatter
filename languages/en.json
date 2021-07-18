@@ -22,6 +22,8 @@
     "splatter.settings.enableBloodTrail.hint":"Display a trail of blood behind the token",
     "splatter.settings.violence.text":"Violence Level",
     "splatter.settings.violence.hint":"Set how much blood to show and how frequent blood trails are",
+    "splatter.settings.wallsBlockBlood.text":"Walls block blood",
+    "splatter.settings.wallsBlockBlood.hint":"Enabling this option might lead to slow performance on lower end hardware",
 
     "splatter.controls.clearBlood.name":"Clear Blood",
     "splatter.controls.splatToken.name":"Bloodsplat Token",
