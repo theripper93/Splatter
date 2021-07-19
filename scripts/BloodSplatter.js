@@ -215,6 +215,10 @@ Hooks.once("socketlib.ready", () => {
 });
 
 Hooks.on("preUpdateActor", function (actor, updates) {
+  updates.oldHpVal = BloodSplatter.getHpVal(actor.data);
+});
+
+Hooks.on("updateActor", function (actor, updates) {
   if (
     !game.settings.get("splatter", "enableBloodsplatter") ||
     (game.settings.get("splatter", "onlyInCombat") && !game.combat?.started)
@@ -224,7 +228,7 @@ Hooks.on("preUpdateActor", function (actor, updates) {
     ? canvas.tokens.get(actor.parent.id)
     : canvas.tokens.placeables.find((t) => t.actor.id == actor.id);
   const hpMax = BloodSplatter.getHpMax(actor.data);
-  const oldHpVal = BloodSplatter.getHpVal(actor.data);
+  const oldHpVal = updates.oldHpVal//BloodSplatter.getHpVal(actor.data);
   const hpVal = BloodSplatter.getHpVal(updates);
   const impactScale = (oldHpVal - hpVal) / hpMax + 0.7;
   if (
