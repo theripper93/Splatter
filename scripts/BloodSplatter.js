@@ -155,7 +155,7 @@ class BloodSplatter {
   }
 
   static socketSplatFn(tokenIds) {
-    if(!game.settings.get("splatter", "enableBloodsplatter")) return
+    if (!game.settings.get("splatter", "enableBloodsplatter")) return;
     for (let tokenId of tokenIds) {
       let token = canvas.tokens.get(tokenId);
       if (!token) return;
@@ -174,7 +174,7 @@ class BloodSplatter {
   }
 
   static belowTreshold(actor) {
-    if(!actor) return false;
+    if (!actor) return false;
     const hpMax = BloodSplatter.getHpMax(actor.data);
     const hpVal = BloodSplatter.getHpVal(actor.data);
     if (
@@ -233,16 +233,20 @@ Hooks.on("preUpdateActor", function (actor, updates) {
     (100 * hpVal) / hpMax <=
       game.settings.get("splatter", "bloodsplatterThreshold")
   ) {
-    if (!canvas.background.BloodSplatter) {
-      new BloodSplatter();
-      canvas.background.BloodSplatter.SplatFromToken(token, {
-        extraScale: impactScale,
-      });
-    } else {
-      canvas.background.BloodSplatter.SplatFromToken(token, {
-        extraScale: impactScale,
-      });
-    }
+    const delay = game.settings.get("splatter", "bloodsplatterDelay");
+
+    setTimeout(function () {
+      if (!canvas.background.BloodSplatter) {
+        new BloodSplatter();
+        canvas.background.BloodSplatter.SplatFromToken(token, {
+          extraScale: impactScale,
+        });
+      } else {
+        canvas.background.BloodSplatter.SplatFromToken(token, {
+          extraScale: impactScale,
+        });
+      }
+    }, delay);
   }
 });
 
