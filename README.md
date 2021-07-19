@@ -36,3 +36,5 @@ I know that this implementation doesen't have all the features BnG had BUT i fee
 ## Licensing
 
 The included Splatter font was created by [Codin Repsh]( https://www.dafont.com/profile.php?user=362757)
+
+Original concept by [edzillion](https://github.com/edzillion/blood-n-guts)
