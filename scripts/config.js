@@ -51,6 +51,25 @@ Hooks.once("init", function () {
     },
   });
 
+  game.settings.register("splatter", "cleanup", {
+    name: game.i18n.localize("splatter.settings.cleanup.text"),
+    hint: game.i18n.localize("splatter.settings.cleanup.hint"),
+    scope: "client",
+    config: true,
+    type: Number,
+    range: {
+      min: 0,
+      max: 10,
+      step: 1,
+    },
+    default: 0,
+    onChange: function () {
+      if (canvas.background.BloodSplatter) {
+        canvas.background.BloodSplatter.Update();
+      }
+    },
+  });
+
   game.settings.register("splatter", "wallsBlockBlood", {
     name: game.i18n.localize("splatter.settings.wallsBlockBlood.text"),
     hint: game.i18n.localize("splatter.settings.wallsBlockBlood.hint"),

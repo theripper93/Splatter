@@ -7,6 +7,7 @@ class BloodSplatter {
   }
 
   Splat(scale, color, alpha) {
+    this.Cleanup()
     let scaleRandom = 0.8 + Math.random() * 0.4;
     let cachedTex =
       PIXI.utils.TextureCache[
@@ -88,9 +89,41 @@ class BloodSplatter {
     this.scaleMulti = game.settings.get("splatter", "bloodsplatterScale");
     this.wallsBlock = game.settings.get("splatter", "wallsBlockBlood");
     this.inCombat = game.settings.get("splatter", "onlyInCombat");
+    this.cleanup = game.settings.get("splatter", "cleanup");
     this.scaleMulti =
       (canvas.dimensions.size / 100) *
       game.settings.get("splatter", "bloodsplatterScale");
+  }
+
+  Cleanup() {
+    if (!this.cleanup) return;
+    if (this.blood.children.length > (12 - this.cleanup)*10) {
+      for (let container of this.blood.children) {
+        if (!container.cleaningUP) {
+          container.cleaningUP = true;
+          this.fadeOut(container);
+          return;
+        }
+      }
+    }
+  }
+
+  fadeOut(container) {
+    let _blood = this.blood;
+    let _this = container;
+    function Animate() {
+      if (_this._destroyed) {
+        canvas.app.ticker.remove(Animate);
+      } else {
+        _this.alpha -= 0.01;
+        if (_this.alpha <= 0) {
+          _blood.removeChild(_this);
+          _this.destroy();
+          canvas.app.ticker.remove(Animate);
+        }
+      }
+    }
+    canvas.app.ticker.add(Animate);
   }
 
   ColorStringToHexAlpha(colorString) {
@@ -228,7 +261,7 @@ Hooks.on("updateActor", function (actor, updates) {
     ? canvas.tokens.get(actor.parent.id)
     : canvas.tokens.placeables.find((t) => t.actor.id == actor.id);
   const hpMax = BloodSplatter.getHpMax(actor.data);
-  const oldHpVal = updates.oldHpVal//BloodSplatter.getHpVal(actor.data);
+  const oldHpVal = updates.oldHpVal; //BloodSplatter.getHpVal(actor.data);
   const hpVal = BloodSplatter.getHpVal(updates);
   const impactScale = (oldHpVal - hpVal) / hpMax + 0.7;
   if (
