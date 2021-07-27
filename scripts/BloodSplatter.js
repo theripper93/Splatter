@@ -206,6 +206,12 @@ class BloodSplatter {
     BloodSplatterSocket.executeForEveryone("Splat", tokenIds);
   }
 
+  static clearAll(){
+    if (canvas.background.BloodSplatter) {
+      canvas.background.BloodSplatter.Destroy();
+    }
+  }
+
   static belowTreshold(actor) {
     if (!actor) return false;
     const hpMax = BloodSplatter.getHpMax(actor.data);
@@ -245,6 +251,7 @@ let BloodSplatterSocket;
 Hooks.once("socketlib.ready", () => {
   BloodSplatterSocket = socketlib.registerModule("splatter");
   BloodSplatterSocket.register("Splat", BloodSplatter.socketSplatFn);
+  BloodSplatterSocket.register("ClearAll", BloodSplatter.clearAll);
 });
 
 Hooks.on("preUpdateActor", function (actor, updates) {
