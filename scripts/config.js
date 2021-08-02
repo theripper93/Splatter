@@ -287,6 +287,7 @@ Hooks.on("renderTokenConfig", (app, html, data) => {
   const tinthtml = html.find('input[name="tint"]');
   const formGroup = tinthtml.closest(".form-group");
   formGroup.after(newHtml);
+  html.find('input[name="flags.splatter.bloodColor"]').value = bloodColor;
   app.setPosition({ height: "auto" });
 });
 
