@@ -266,7 +266,7 @@ Hooks.on("updateActor", function (actor, updates) {
     return;
   let token = actor.parent
     ? canvas.tokens.get(actor.parent.id)
-    : canvas.tokens.placeables.find((t) => t.actor.id == actor.id);
+    : canvas.tokens.placeables.find((t) => t.actor?.id == actor.id);
   const hpMax = BloodSplatter.getHpMax(actor.data);
   const oldHpVal = updates.oldHpVal; //BloodSplatter.getHpVal(actor.data);
   const hpVal = BloodSplatter.getHpVal(updates);
