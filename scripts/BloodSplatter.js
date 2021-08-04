@@ -244,6 +244,30 @@ class BloodSplatter {
       game.settings.get("splatter", "creatureTypeCustom")
     );
   }
+  static async saveBlood() {
+    let container = new PIXI.Container();
+    let x = Infinity;
+    let y = Infinity;
+    for (let child of canvas.background.BloodSplatter.blood.children) {
+      let cx = child.position.x - child.width / 2;
+      let cy = child.position.y - child.height / 2;
+      if (cx < x) x = cx;
+      if (cy < y) y = cy;
+    }
+    container.addChild(canvas.background.BloodSplatter.blood);
+  
+    let tile = await Tile.create({
+      img: await canvas.app.renderer.extract
+        .base64(container, "image/webp", 0.1)
+        .replace("webp", "png"),
+      height: container.height,
+      width: container.width,
+      x: x,
+      y: y,
+    });
+  
+    BloodSplatterSocket.executeForEveryone("ClearAll");
+    }
 }
 
 let BloodSplatterSocket;
