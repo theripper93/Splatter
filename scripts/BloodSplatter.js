@@ -7,7 +7,7 @@ class BloodSplatter {
   }
 
   Splat(scale, color, alpha) {
-    this.Cleanup()
+    this.Cleanup();
     let scaleRandom = 0.8 + Math.random() * 0.4;
     let cachedTex =
       PIXI.utils.TextureCache[
@@ -97,7 +97,7 @@ class BloodSplatter {
 
   Cleanup() {
     if (!this.cleanup) return;
-    if (this.blood.children.length > (12 - this.cleanup)*10) {
+    if (this.blood.children.length > (12 - this.cleanup) * 10) {
       for (let container of this.blood.children) {
         if (!container.cleaningUP) {
           container.cleaningUP = true;
@@ -206,7 +206,7 @@ class BloodSplatter {
     BloodSplatterSocket.executeForEveryone("Splat", tokenIds);
   }
 
-  static clearAll(){
+  static clearAll() {
     if (canvas.background.BloodSplatter) {
       canvas.background.BloodSplatter.Destroy();
     }
@@ -255,8 +255,8 @@ class BloodSplatter {
       if (cy < y) y = cy;
     }
     container.addChild(canvas.background.BloodSplatter.blood);
-  
-    let tile = await Tile.create({
+
+    await Tile.create({
       img: await canvas.app.renderer.extract
         .base64(container, "image/webp", 0.1)
         .replace("webp", "png"),
@@ -265,9 +265,21 @@ class BloodSplatter {
       x: x,
       y: y,
     });
-  
+
     BloodSplatterSocket.executeForEveryone("ClearAll");
+  }
+  static generateSplat(token, impactScale) {
+    if (!canvas.background.BloodSplatter) {
+      new BloodSplatter();
+      canvas.background.BloodSplatter.SplatFromToken(token, {
+        extraScale: impactScale,
+      });
+    } else {
+      canvas.background.BloodSplatter.SplatFromToken(token, {
+        extraScale: impactScale,
+      });
     }
+  }
 }
 
 let BloodSplatterSocket;
@@ -302,19 +314,30 @@ Hooks.on("updateActor", function (actor, updates) {
       game.settings.get("splatter", "bloodsplatterThreshold")
   ) {
     const delay = game.settings.get("splatter", "bloodsplatterDelay");
-
-    setTimeout(function () {
-      if (!canvas.background.BloodSplatter) {
-        new BloodSplatter();
-        canvas.background.BloodSplatter.SplatFromToken(token, {
-          extraScale: impactScale,
-        });
-      } else {
-        canvas.background.BloodSplatter.SplatFromToken(token, {
-          extraScale: impactScale,
-        });
-      }
-    }, delay);
+    if (game.settings.get("splatter", "syncWithAA")) {
+      setTimeout(function () {
+        if (game.isAAPlaying) {
+          const hookId = Hooks.on("aa.animationEnd", (sourceToken, target) => {
+            if(!target || target=="no-target") {
+              Hooks.off("aa.animationEnd", hookId);
+              return;
+            }
+            if(target.id == token.id){
+              Hooks.off("aa.animationEnd", hookId);
+              BloodSplatter.generateSplat(token, impactScale);
+            }
+          });
+        } else {
+          setTimeout(function () {
+            BloodSplatter.generateSplat(token, impactScale);
+          }, delay);
+        }
+      }, 300);
+    } else {
+      setTimeout(function () {
+        BloodSplatter.generateSplat(token, impactScale);
+      }, delay);
+    }
   }
 });
 

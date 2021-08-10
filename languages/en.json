@@ -30,6 +30,8 @@
     "splatter.settings.bloodsplatterDelay.hint":"Delay in milliseconds between damage dealt and blood spray - usefull if using animations (Suggested 1750 for Automated Animations)",
     "splatter.settings.cleanup.text":"Cleanup",
     "splatter.settings.cleanup.hint":"Fade out older splats after a certain threshold is reached to improve performance. 0 to disable, highest values for more aggressive cleanup",
+    "splatter.settings.syncWithAA.text": "Sync with Automated Animations",
+    "splatter.settings.syncWithAA.hint": "Sync Bloodsplats with Automated Animations (requires midi-qol automatic damage application)",
 
     "splatter.controls.clearBlood.name":"Clear Blood",
     "splatter.controls.splatToken.name":"Bloodsplat Token",

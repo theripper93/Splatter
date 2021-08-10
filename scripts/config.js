@@ -2,6 +2,16 @@ Hooks.once("init", function () {
   /**************************
    * BLOODSPLATTER SETTINGS *
    **************************/
+  game.isAAPlaying = false;
+
+  Hooks.on("aa.preAnimationStart",() => {
+    game.isAAPlaying = true;
+  })
+
+  Hooks.on("aa.animationEnd",() => {
+    game.isAAPlaying = false;
+  })
+
 
   game.settings.register("splatter", "enableBloodsplatter", {
     name: game.i18n.localize("splatter.settings.enableBloodsplatter.text"),
@@ -185,6 +195,20 @@ Hooks.once("init", function () {
   game.settings.register("splatter", "onlyInCombat", {
     name: game.i18n.localize("splatter.settings.onlyInCombat.text"),
     hint: game.i18n.localize("splatter.settings.onlyInCombat.hint"),
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: function () {
+      if (canvas.background.BloodSplatter) {
+        canvas.background.BloodSplatter.Update();
+      }
+    },
+  });
+
+  game.settings.register("splatter", "syncWithAA", {
+    name: game.i18n.localize("splatter.settings.syncWithAA.text"),
+    hint: game.i18n.localize("splatter.settings.syncWithAA.hint"),
     scope: "world",
     config: true,
     type: Boolean,
