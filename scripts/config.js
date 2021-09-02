@@ -206,6 +206,20 @@ Hooks.once("init", function () {
     },
   });
 
+  game.settings.register("splatter", "onlyIfVisible", {
+    name: game.i18n.localize("splatter.settings.onlyIfVisible.text"),
+    hint: game.i18n.localize("splatter.settings.onlyIfVisible.hint"),
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: function () {
+      if (canvas.background.BloodSplatter) {
+        canvas.background.BloodSplatter.Update();
+      }
+    },
+  });
+
   game.settings.register("splatter", "syncWithAA", {
     name: game.i18n.localize("splatter.settings.syncWithAA.text"),
     hint: game.i18n.localize("splatter.settings.syncWithAA.hint"),

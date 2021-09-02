@@ -26,6 +26,8 @@
     "splatter.settings.wallsBlockBlood.hint":"Enabling this option might lead to slow performance on lower end hardware",
     "splatter.settings.onlyInCombat.text":"Only in combat",
     "splatter.settings.onlyInCombat.hint":"Only show blood splats/trails when in combat",
+    "splatter.settings.onlyIfVisible.text":"Only if visible",
+    "splatter.settings.onlyIfVisible.hint":"Only show blood splats/trails when the token is not hidden",
     "splatter.settings.bloodsplatterDelay.text":"Delay",
     "splatter.settings.bloodsplatterDelay.hint":"Delay in milliseconds between damage dealt and blood spray - usefull if using animations (Suggested 1750 for Automated Animations)",
     "splatter.settings.cleanup.text":"Cleanup",

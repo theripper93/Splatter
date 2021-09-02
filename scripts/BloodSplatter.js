@@ -89,6 +89,7 @@ class BloodSplatter {
     this.scaleMulti = game.settings.get("splatter", "bloodsplatterScale");
     this.wallsBlock = game.settings.get("splatter", "wallsBlockBlood");
     this.inCombat = game.settings.get("splatter", "onlyInCombat");
+    this.ifVisible = game.settings.get("splatter", "onlyIfVisible");
     this.cleanup = game.settings.get("splatter", "cleanup");
     this.scaleMulti =
       (canvas.dimensions.size / 100) *
@@ -159,8 +160,8 @@ class BloodSplatter {
     if (
       this.actor &&
       !this.bleeding &&
-      (!canvas.background.BloodSplatter?.inCombat ||
-        (canvas.background.BloodSplatter?.inCombat && game.combat?.started))
+      (game.combat?.started || !canvas.background.BloodSplatter?.inCombat) &&
+      (!this.data.hidden || !canvas.background.BloodSplatter?.ifVisible)
     ) {
       this.bleeding = true;
       const timeout = canvas.background.BloodSplatter?.violence
@@ -303,6 +304,8 @@ Hooks.on("updateActor", function (actor, updates) {
   let token = actor.parent
     ? canvas.tokens.get(actor.parent.id)
     : canvas.tokens.placeables.find((t) => t.actor?.id == actor.id);
+  if (game.settings.get("splatter", "onlyIfVisible") && token.data.hidden)
+    return;
   const hpMax = BloodSplatter.getHpMax(actor.data);
   const oldHpVal = updates.oldHpVal; //BloodSplatter.getHpVal(actor.data);
   const hpVal = BloodSplatter.getHpVal(updates);
