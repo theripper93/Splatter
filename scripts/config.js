@@ -303,7 +303,7 @@ Hooks.once("ready", function () {
 });
 
 Hooks.on("renderTokenConfig", (app, html, data) => {
-  let bloodColor = app.object.getFlag("splatter", "bloodColor") || "";
+  let bloodColor = app.token.getFlag("splatter", "bloodColor") || "";
   let newHtml = `<div class="form-group">
     <label>${game.i18n.localize("splatter.tokenconfig.bloodColor.name")}</label>
     <input type="text" name="flags.splatter.bloodColor" is="colorpicker-input" data-responsive-color value="${bloodColor}">
