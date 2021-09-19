@@ -33,6 +33,8 @@
     "splatter.settings.bloodsplatterDelay.hint":"Retraso en milisegundos entre el daño y la mancha de sangre - es útil si se usan animaciones (se sugiere usar un valor de 1750 al usar el módulo Automated Animations)",
     "splatter.settings.cleanup.text":"Grado de desvanecimiento",
     "splatter.settings.cleanup.hint":"Tras un tiempo prestablecido, comenzarán a desaparecer las manchas de sangre para mejorar el rendimiento. Establézcalo a 0 para deshabilitarlo, cuanto mayor es el valor, más agresiva es la limpieza",
+    "splatter.settings.syncWithAA.text": "Sincronizar con Automated Animations",
+    "splatter.settings.syncWithAA.hint": "Sincroniza las manchas de sangre con Automated Animations (requiere la aplicación automática de daño de midi-qol)",
 
     "splatter.controls.clearBlood.name":"Limpiar sangre",
     "splatter.controls.splatToken.name":"Icono de mancha de sangre",
