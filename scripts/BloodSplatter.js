@@ -140,11 +140,11 @@ class BloodSplatter {
     );
   }
 
-  static getMask(origin, radius) {
-    const { rays, los, fov } = canvas.walls.computePolygon(origin, radius, {
-      type: "movement",
+  static getMask(origin, radius){
+    const fov = CONFIG.Canvas.losBackend.create(origin, {
+      type: "sight",
       density: "12",
-    });
+    }).points;
     let g = new PIXI.Graphics();
     g.beginFill(0xffffff);
     g.drawPolygon(fov);
