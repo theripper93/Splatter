@@ -5,7 +5,7 @@
 ## Add blood and gore to your games
 Give that extra touch to your game, compatible with most game systems (minor configuration required)
 
-### Bood on hit
+### Blood on hit
 The bigger the hit, the more the blood. Configure manual blood scale, violence level, and blood trails
 
 <img src="https://user-images.githubusercontent.com/1346839/126053219-fe52f8b8-3203-46c0-a7df-26d4a235f388.png" width="400">
