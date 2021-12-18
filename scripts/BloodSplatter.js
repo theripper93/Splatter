@@ -224,22 +224,22 @@ class BloodSplatter {
     return false;
   }
   static getHpVal(actorData) {
-    return Object.byString(
+    return getProperty(
       actorData,
       game.settings.get("splatter", "currentHp")
     );
   }
   static getHpMax(actorData) {
-    return Object.byString(actorData, game.settings.get("splatter", "maxHp"));
+    return getProperty(actorData, game.settings.get("splatter", "maxHp"));
   }
   static getCreatureType(actorData) {
-    return Object.byString(
+    return getProperty(
       actorData,
       game.settings.get("splatter", "creatureType")
     );
   }
   static getCreatureTypeCustom(actorData) {
-    return Object.byString(
+    return getProperty(
       actorData,
       game.settings.get("splatter", "creatureTypeCustom")
     );
