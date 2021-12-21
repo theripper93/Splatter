@@ -142,8 +142,8 @@ class BloodSplatter {
 
   static getMask(origin, radius){
     const fov = CONFIG.Canvas.losBackend.create(origin, {
-      type: "sight",
-      density: "12",
+      type: "move",
+      density: 12,
     }).points;
     let g = new PIXI.Graphics();
     g.beginFill(0xffffff);
