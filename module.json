@@ -24,7 +24,7 @@
       {
           "lang": "ja",
           "name": "日本語",
-          "path": "lang/ja.json"
+          "path": "languages/ja.json"
       }
   ],
   "scripts": [
