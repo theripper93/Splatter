@@ -256,7 +256,7 @@ class BloodSplatter {
     }
     container.addChild(canvas.background.BloodSplatter.blood);
 
-    await Tile.create({
+    await canvas.scene.createEmbeddedDocuments("Tile",[{
       img: await canvas.app.renderer.extract
         .base64(container, "image/webp", 0.1)
         .replace("webp", "png"),
@@ -264,7 +264,7 @@ class BloodSplatter {
       width: container.width,
       x: x,
       y: y,
-    });
+    }]);
 
     BloodSplatterSocket.executeForEveryone("ClearAll");
   }
