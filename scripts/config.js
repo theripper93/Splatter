@@ -273,7 +273,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "data.attributes.hp.value",
+    default: (game.system.id == "wfrp4e" ? "data.status.wounds.value":"data.attributes.hp.value"),
   });
 
   game.settings.register("splatter", "maxHp", {
@@ -282,7 +282,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "data.attributes.hp.max",
+    default: (game.system.id == "wfrp4e" ? "data.status.wounds.max":"data.attributes.hp.max"),
   });
 });
 
