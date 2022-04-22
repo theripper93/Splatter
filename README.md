@@ -7,6 +7,11 @@
 
 On some systems the `Creature Type` and `Custom Creature Type` options might cause Splatter to not work correctly, simply go into the module settings for Splatter and empty both those settings leaving them blank.
 
+## CONFIGURATIONS
+
+For information on how to configure Splatter for your system please read this https://github.com/theripper93/Splatter/blob/main/CONFIGURATIONS.MD
+You are also free to send in PRs with configurations for missing systems!
+
 ## Add blood and gore to your games
 Give that extra touch to your game, compatible with most game systems (minor configuration required)
 
