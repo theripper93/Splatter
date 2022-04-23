@@ -27,3 +27,26 @@ const bloodSheetData = {
 
 game.settings.set("splatter", "BloodSheetData", bloodSheetData);
 ```
+
+# ALIEN
+
+1. Module settings:
+
+| Field | Value |
+|:---|:---|
+| Creature Type | type |
+| Custom Creature Type | type |
+| Current HP | data.header.health.value |
+| Max HP | data.header.health.max |
+
+2. Script macro to set default colors: red for human blood, white-ish for synthetics' fluid, and green for xenomorph's acid. (Remember that *Automatic Blood Color* must be enabled in the module's settings.)
+
+```js
+const BloodSheetData = {
+  character: "#a51414b0",
+  creature: "#1dbb02b0",
+  synthetic: "#f7f7f7b0",
+};
+
+game.settings.set("splatter", "BloodSheetData", bloodSheetData);
+```
