@@ -284,6 +284,15 @@ Hooks.once("init", function () {
     type: String,
     default: "data.attributes.hp.max",
   });
+
+  game.settings.register("splatter", "useWounds", {
+    name: game.i18n.localize("splatter.settings.useWounds.text"),
+    hint: game.i18n.localize("splatter.settings.useWounds.hint"),
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+  });
 });
 
 Hooks.once("ready", function () {

@@ -288,6 +288,65 @@ class BloodSplatter {
       });
     }
   }
+  static getImpactScale(actor, updates){
+    const useWounds = game.settings.get("splatter", "useWounds")
+    return useWounds ? BloodSplatter.getImpactScaleWounds(actor, updates) : BloodSplatter.getImpactScaleStandard(actor, updates);
+  }
+  static getImpactScaleStandard(actor, updates) {
+    const hpMax = BloodSplatter.getHpMax(actor.data);
+    const oldHpVal = updates.oldHpVal; //BloodSplatter.getHpVal(actor.data);
+    const hpVal = BloodSplatter.getHpVal(updates);
+    const impactScale = (oldHpVal - hpVal) / hpMax + 0.7;
+    if (hpVal != undefined &&
+      hpVal <= oldHpVal &&
+      (100 * hpVal) / hpMax <=
+      game.settings.get("splatter", "bloodsplatterThreshold")) {
+      return impactScale;
+    }else{
+      return false;
+    }
+  }
+  static getImpactScaleWounds(actor, updates) {
+    const hpMax = BloodSplatter.getHpMax(actor.data);
+    const oldHpVal = updates.oldHpVal; //BloodSplatter.getHpVal(actor.data);
+    const hpVal = BloodSplatter.getHpVal(updates);
+    const impactScale = (hpVal - oldHpVal) / hpMax + 0.7;
+    if (hpVal != undefined &&
+      hpVal >= oldHpVal &&
+      (100 * hpVal) / hpMax >=
+      game.settings.get("splatter", "bloodsplatterThreshold")) {
+      return impactScale;
+    }else{
+      return false;
+    }
+  }
+  static executeSplat(token, impactScale) {
+    const delay = game.settings.get("splatter", "bloodsplatterDelay");
+    if (game.settings.get("splatter", "syncWithAA")) {
+      setTimeout(function () {
+        if (game.isAAPlaying) {
+          const hookId = Hooks.on("aa.animationEnd", (sourceToken, target) => {
+            if (!target || target == "no-target") {
+              Hooks.off("aa.animationEnd", hookId);
+              return;
+            }
+            if (target.id == token.id) {
+              Hooks.off("aa.animationEnd", hookId);
+              BloodSplatter.generateSplat(token, impactScale);
+            }
+          });
+        } else {
+          setTimeout(function () {
+            BloodSplatter.generateSplat(token, impactScale);
+          }, delay);
+        }
+      }, 300);
+    } else {
+      setTimeout(function () {
+        BloodSplatter.generateSplat(token, impactScale);
+      }, delay);
+    }
+  }
 }
 
 let BloodSplatterSocket;
@@ -311,45 +370,14 @@ Hooks.on("updateActor", function (actor, updates) {
   let token = actor.parent
     ? canvas.tokens.get(actor.parent.id)
     : canvas.tokens.placeables.find((t) => t.actor?.id == actor.id);
-  const hpMax = BloodSplatter.getHpMax(actor.data);
-  const oldHpVal = updates.oldHpVal; //BloodSplatter.getHpVal(actor.data);
-  const hpVal = BloodSplatter.getHpVal(updates);
-  const impactScale = (oldHpVal - hpVal) / hpMax + 0.7;
-  if (
-    hpVal != undefined &&
-    hpVal <= oldHpVal &&
-    (100 * hpVal) / hpMax <=
-      game.settings.get("splatter", "bloodsplatterThreshold")
-  ) {
-    const delay = game.settings.get("splatter", "bloodsplatterDelay");
-    if (game.settings.get("splatter", "syncWithAA")) {
-      setTimeout(function () {
-        if (game.isAAPlaying) {
-          const hookId = Hooks.on("aa.animationEnd", (sourceToken, target) => {
-            if(!target || target=="no-target") {
-              Hooks.off("aa.animationEnd", hookId);
-              return;
-            }
-            if(target.id == token.id){
-              Hooks.off("aa.animationEnd", hookId);
-              BloodSplatter.generateSplat(token, impactScale);
-            }
-          });
-        } else {
-          setTimeout(function () {
-            BloodSplatter.generateSplat(token, impactScale);
-          }, delay);
-        }
-      }, 300);
-    } else {
-      setTimeout(function () {
-        BloodSplatter.generateSplat(token, impactScale);
-      }, delay);
-    }
-  }
+  if (!token) return;
+
+  const impactScale = BloodSplatter.getImpactScale(actor, updates, token);
+  if( impactScale ) BloodSplatter.executeSplat(token, impactScale);
 });
 
 Hooks.on("canvasReady", function () {
   if (canvas.background.BloodSplatter)
     canvas.background.BloodSplatter.Destroy();
 });
+

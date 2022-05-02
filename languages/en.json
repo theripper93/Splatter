@@ -33,6 +33,9 @@
     "splatter.settings.syncWithAA.text": "Sync with Automated Animations",
     "splatter.settings.syncWithAA.hint": "Sync Bloodsplats with Automated Animations (requires midi-qol automatic damage application)",
 
+    "splatter.settings.useWounds.text": "Wounds System",
+    "splatter.settings.useWounds.hint": "Enable on systems that use Wounds (e.g. SWADE, SotDL and other similar systems)",
+
     "splatter.controls.clearBlood.name":"Clear Blood",
     "splatter.controls.splatToken.name":"Bloodsplat Token",
     "splatter.controls.splatToken.warn":"Please select one or more tokens",
