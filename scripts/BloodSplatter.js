@@ -48,6 +48,9 @@ class BloodSplatter {
       Math.max(token.data.width, token.data.height) *
       extraScale;
     const violence = isTrail ? 1 : this.violence;
+    if(!isTrail && game.Levels3DPreview?._active){
+      return this.splat3D(splatScale, colorData?.color, colorData?.alpha,token);
+    }
     let splatContainer = new PIXI.Container();
     splatContainer.x = token.center.x;
     splatContainer.y = token.center.y;
@@ -71,6 +74,33 @@ class BloodSplatter {
     }
     this.blood.addChild(splatContainer);
   }
+
+  splat3D(scale, color, alpha,token){
+    color = color ?? this.color;
+    alpha = alpha ?? this.alpha;
+    color = color.replace("0x", "#");
+    const count = 10;
+    if(game.Levels3DPreview.tokens[token.id]) game.Levels3DPreview.tokens[token.id].animationHandler.playAnimation("shake");
+    for(let i = 0; i < count; i++){
+      new Particle3D("r")
+      .from(token)
+      .to(token)
+      .sprite(`modules/splatter/bloodsplats/blood${Math.floor(Math.random() * 26)}.svg`)
+      .color(color,color)
+      .emitterSize(10*scale)
+      .force(0,300)
+      .push(100,100,100)
+      .life(1000)
+      .speed(0.1)
+      .mass(0)
+      .scale(0.7*scale,2*scale)
+      .rate(2,16)
+      .duration(200)
+      .startAfter(Math.random()*200)
+      .start(false);
+    }
+  }
+
 
   Destroy() {
     this.blood.destroy({ children: true, texture: true });
