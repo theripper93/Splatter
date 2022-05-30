@@ -36,6 +36,9 @@
     "splatter.settings.syncWithAA.text": "Sincronizar con Automated Animations",
     "splatter.settings.syncWithAA.hint": "Sincroniza las manchas de sangre con Automated Animations (requiere la aplicación automática de daño de midi-qol)",
 
+    "splatter.settings.useWounds.text": "Sistema de heridas",
+    "splatter.settings.useWounds.hint": "Habilite esta opción en sistemas que usen heridas (p.e. SWEA, SotDL y sistemas similares)",
+
     "splatter.controls.clearBlood.name":"Limpiar sangre",
     "splatter.controls.splatToken.name":"Icono de mancha de sangre",
     "splatter.controls.splatToken.warn":"Por favor, seleccione uno o más iconos",
