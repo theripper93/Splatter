@@ -2,8 +2,8 @@ class BloodSplatter {
   constructor() {
     this.blood = new PIXI.Container();
     this.Update();
-    canvas.background.addChild(this.blood);
-    canvas.background.BloodSplatter = this;
+    canvas.primary.addChild(this.blood);
+    canvas.primary.BloodSplatter = this;
   }
 
   Splat(scale, color, alpha) {
@@ -34,7 +34,7 @@ class BloodSplatter {
   }
 
   SplatFromToken(token, { extraScale = 1, isTrail = false } = {}) {
-    const colorFlag = token.data.flags.splatter?.bloodColor;
+    const colorFlag = token.document.flags.splatter?.bloodColor;
     let colorData = {};
     if (!colorFlag && this.bloodSheet) {
       const creatureType = this.creatureType(token);
@@ -44,8 +44,8 @@ class BloodSplatter {
       colorData = this.ColorStringToHexAlpha(colorFlag);
     }
     const splatScale =
-      token.data.scale *
-      Math.max(token.data.width, token.data.height) *
+      ((token.document.texture.scaleX + token.document.texture.scaleY)/2) *
+      Math.max(token.document.width, token.document.height) *
       extraScale;
     const violence = isTrail ? 1 : this.violence;
     if(!isTrail && game.Levels3DPreview?._active){
@@ -65,7 +65,7 @@ class BloodSplatter {
         splatContainer.height
       );
       const radius = maxDimension > 10 ? maxDimension : 1000;
-      const tokenMaxDim = Math.max(token.data.width, token.data.height);
+      const tokenMaxDim = Math.max(token.document.width, token.document.height);
       if (radius >= tokenMaxDim) {
         let mask = BloodSplatter.getMask(token.center, radius);
         splatContainer.addChild(mask);
@@ -104,7 +104,7 @@ class BloodSplatter {
 
   Destroy() {
     this.blood.destroy({ children: true, texture: true });
-    canvas.background.BloodSplatter = null;
+    canvas.primary.BloodSplatter = null;
   }
 
   Update() {
@@ -185,27 +185,41 @@ class BloodSplatter {
     return g;
   }
 
+  static bloodTrailOnTickWrapper(wrapped, ...args){
+    args[1] = args[1] ?? {};
+    const _this = this;
+        function SplatterWrap(ontick) {
+          return (...args) => {
+            BloodSplatter.bloodTrail(...args).bind(_this);
+            return ontick(...args);
+          };
+        }
+        args[1].ontick = args[1].ontick ? SplatterWrap(args[1].ontick) : BloodSplatter.bloodTrail.bind(_this);
+
+        return wrapped(...args);
+  }
+
   static bloodTrail(wrapped, ...args) {
     if (
       this.actor &&
       !this.bleeding &&
-      (!canvas.background.BloodSplatter?.inCombat ||
-        (canvas.background.BloodSplatter?.inCombat && game.combat?.started))
+      (!canvas.primary.BloodSplatter?.inCombat ||
+        (canvas.primary.BloodSplatter?.inCombat && game.combat?.started))
     ) {
       this.bleeding = true;
-      const timeout = canvas.background.BloodSplatter?.violence
-        ? 300 - canvas.background.BloodSplatter?.violence * 20
+      const timeout = canvas.primary.BloodSplatter?.violence
+        ? 300 - canvas.primary.BloodSplatter?.violence * 20
         : 100;
       setTimeout(() => {
         if (BloodSplatter.belowTreshold(this.actor)) {
-          if (canvas.background.BloodSplatter) {
-            canvas.background.BloodSplatter.SplatFromToken(this, {
+          if (canvas.primary.BloodSplatter) {
+            canvas.primary.BloodSplatter.SplatFromToken(this, {
               extraScale: Math.random() * 0.5,
               isTrail: true,
             });
           } else {
             new BloodSplatter();
-            canvas.background.BloodSplatter.SplatFromToken(this, {
+            canvas.primary.BloodSplatter.SplatFromToken(this, {
               extraScale: Math.random() * 0.5,
               isTrail: true,
             });
@@ -214,7 +228,6 @@ class BloodSplatter {
         this.bleeding = false;
       }, timeout);
     }
-    return wrapped(...args);
   }
 
   static socketSplatFn(tokenIds) {
@@ -222,11 +235,11 @@ class BloodSplatter {
     for (let tokenId of tokenIds) {
       let token = canvas.tokens.get(tokenId);
       if (!token) return;
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.SplatFromToken(token);
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.SplatFromToken(token);
       } else {
         new BloodSplatter();
-        canvas.background.BloodSplatter.SplatFromToken(token);
+        canvas.primary.BloodSplatter.SplatFromToken(token);
       }
     }
   }
@@ -237,8 +250,8 @@ class BloodSplatter {
   }
 
   static clearAll() {
-    if (canvas.background.BloodSplatter) {
-      canvas.background.BloodSplatter.Destroy();
+    if (canvas.primary.BloodSplatter) {
+      canvas.primary.BloodSplatter.Destroy();
     }
   }
 
@@ -278,13 +291,13 @@ class BloodSplatter {
     let container = new PIXI.Container();
     let x = Infinity;
     let y = Infinity;
-    for (let child of canvas.background.BloodSplatter.blood.children) {
+    for (let child of canvas.primary.BloodSplatter.blood.children) {
       let cx = child.position.x - child.width / 2;
       let cy = child.position.y - child.height / 2;
       if (cx < x) x = cx;
       if (cy < y) y = cy;
     }
-    container.addChild(canvas.background.BloodSplatter.blood);
+    container.addChild(canvas.primary.BloodSplatter.blood);
     const b64 = await canvas.app.renderer.extract.base64(container, "image/png", 1);
     try{
             await FilePicker.createDirectory("data", "splatter");
@@ -307,24 +320,24 @@ class BloodSplatter {
     BloodSplatterSocket.executeForEveryone("ClearAll");
   }
   static generateSplat(token, impactScale) {
-    if (!canvas.background.BloodSplatter) {
+    if (!canvas.primary.BloodSplatter) {
       new BloodSplatter();
-      canvas.background.BloodSplatter.SplatFromToken(token, {
+      canvas.primary.BloodSplatter.SplatFromToken(token, {
         extraScale: impactScale,
       });
     } else {
-      canvas.background.BloodSplatter.SplatFromToken(token, {
+      canvas.primary.BloodSplatter.SplatFromToken(token, {
         extraScale: impactScale,
       });
     }
   }
-  static getImpactScale(actor, updates){
+  static getImpactScale(actor, updates, diff){
     const useWounds = game.settings.get("splatter", "useWounds")
-    return useWounds ? BloodSplatter.getImpactScaleWounds(actor, updates) : BloodSplatter.getImpactScaleStandard(actor, updates);
+    return useWounds ? BloodSplatter.getImpactScaleWounds(actor, updates, diff) : BloodSplatter.getImpactScaleStandard(actor, updates, diff);
   }
-  static getImpactScaleStandard(actor, updates) {
+  static getImpactScaleStandard(actor, updates, diff) {
     const hpMax = BloodSplatter.getHpMax(actor.data);
-    const oldHpVal = updates.oldHpVal; //BloodSplatter.getHpVal(actor.data);
+    const oldHpVal = diff.oldHpVal; //BloodSplatter.getHpVal(actor.data);
     const hpVal = BloodSplatter.getHpVal(updates);
     const impactScale = (oldHpVal - hpVal) / hpMax + 0.7;
     if (hpVal != undefined &&
@@ -336,9 +349,9 @@ class BloodSplatter {
       return false;
     }
   }
-  static getImpactScaleWounds(actor, updates) {
+  static getImpactScaleWounds(actor, updates, diff) {
     const hpMax = BloodSplatter.getHpMax(actor.data);
-    const oldHpVal = updates.oldHpVal; //BloodSplatter.getHpVal(actor.data);
+    const oldHpVal = diff.oldHpVal; //BloodSplatter.getHpVal(actor.data);
     const hpVal = BloodSplatter.getHpVal(updates);
     const impactScale = (hpVal - oldHpVal) / hpMax + 0.7;
     if (hpVal != undefined &&
@@ -387,11 +400,11 @@ Hooks.once("socketlib.ready", () => {
   BloodSplatterSocket.register("ClearAll", BloodSplatter.clearAll);
 });
 
-Hooks.on("preUpdateActor", function (actor, updates) {
-  updates.oldHpVal = BloodSplatter.getHpVal(actor.data);
+Hooks.on("preUpdateActor", function (actor, updates, diff) {
+  diff.oldHpVal = BloodSplatter.getHpVal(actor.data);
 });
 
-Hooks.on("updateActor", function (actor, updates) {
+Hooks.on("updateActor", function (actor, updates, diff) {
   if (
     !game.settings.get("splatter", "enableBloodsplatter") ||
     (game.settings.get("splatter", "onlyInCombat") && !game.combat?.started)
@@ -402,12 +415,12 @@ Hooks.on("updateActor", function (actor, updates) {
     : canvas.tokens.placeables.find((t) => t.actor?.id == actor.id);
   if (!token) return;
 
-  const impactScale = BloodSplatter.getImpactScale(actor, updates, token);
+  const impactScale = BloodSplatter.getImpactScale(actor, updates, diff);
   if( impactScale ) BloodSplatter.executeSplat(token, impactScale);
 });
 
 Hooks.on("canvasReady", function () {
-  if (canvas.background.BloodSplatter)
-    canvas.background.BloodSplatter.Destroy();
+  if (canvas.primary.BloodSplatter)
+    canvas.primary.BloodSplatter.Destroy();
 });
 

@@ -3,7 +3,7 @@
 
 ![image](https://user-images.githubusercontent.com/1346839/161739973-90180e30-4e59-426f-8d01-a6caf0ecc1a4.png)
 
-Creature Type (and Custom): document.race.data.data.creatureType
+Creature Type (and Custom): document.race.document.data.creatureType
 Leave HP as is.
 
 Here's a script macro to setup some default colors for the different creature types found in pf1

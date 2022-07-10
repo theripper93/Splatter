@@ -27,15 +27,15 @@ Hooks.once("init", function () {
       if (!sett) {
         libWrapper.unregister(
           "splatter",
-          "Token.prototype._onMovementFrame",
+          "Token.prototype.animate",
           false
         );
       } else {
       if(game.settings.get("splatter", "enableBloodTrail")){
         libWrapper.register(
           "splatter",
-          "Token.prototype._onMovementFrame",
-          BloodSplatter.bloodTrail
+          "Token.prototype.animate",
+          BloodSplatter.bloodTrailOnTickWrapper
         );
       }
       }
@@ -105,13 +105,13 @@ Hooks.once("init", function () {
       if (sett && game.settings.get("splatter", "enableBloodsplatter")) {
         libWrapper.register(
           "splatter",
-          "Token.prototype._onMovementFrame",
-          BloodSplatter.bloodTrail
+          "Token.prototype.animate",
+          BloodSplatter.bloodTrailOnTickWrapper
         );
       } else {
         libWrapper.unregister(
           "splatter",
-          "Token.prototype._onMovementFrame",
+          "Token.prototype.animate",
           false
         );
       }
@@ -121,8 +121,8 @@ Hooks.once("init", function () {
   if (game.settings.get("splatter", "enableBloodTrail") === true && game.settings.get("splatter", "enableBloodsplatter")===true) {
     libWrapper.register(
       "splatter",
-      "Token.prototype._onMovementFrame",
-      BloodSplatter.bloodTrail
+      "Token.prototype.animate",
+      BloodSplatter.bloodTrailOnTickWrapper
     );
   }
 
