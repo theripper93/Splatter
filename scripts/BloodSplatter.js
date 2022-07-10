@@ -257,8 +257,8 @@ class BloodSplatter {
 
   static belowTreshold(actor) {
     if (!actor) return false;
-    const hpMax = BloodSplatter.getHpMax(actor.data);
-    const hpVal = BloodSplatter.getHpVal(actor.data);
+    const hpMax = BloodSplatter.getHpMax(actor);
+    const hpVal = BloodSplatter.getHpVal(actor);
     if (
       (100 * hpVal) / hpMax <=
       game.settings.get("splatter", "bloodsplatterThreshold")
@@ -266,14 +266,14 @@ class BloodSplatter {
       return true;
     return false;
   }
-  static getHpVal(actorData) {
+  static getHpVal(actor) {
     return getProperty(
-      actorData,
+      actor.system ?? actor,
       game.settings.get("splatter", "currentHp")
     );
   }
-  static getHpMax(actorData) {
-    return getProperty(actorData, game.settings.get("splatter", "maxHp"));
+  static getHpMax(actor) {
+    return getProperty(actor.system ?? actor, game.settings.get("splatter", "maxHp"));
   }
   static getCreatureType(actorData) {
     return getProperty(
@@ -336,7 +336,7 @@ class BloodSplatter {
     return useWounds ? BloodSplatter.getImpactScaleWounds(actor, updates, diff) : BloodSplatter.getImpactScaleStandard(actor, updates, diff);
   }
   static getImpactScaleStandard(actor, updates, diff) {
-    const hpMax = BloodSplatter.getHpMax(actor.data);
+    const hpMax = BloodSplatter.getHpMax(actor);
     const oldHpVal = diff.oldHpVal; //BloodSplatter.getHpVal(actor.data);
     const hpVal = BloodSplatter.getHpVal(updates);
     const impactScale = (oldHpVal - hpVal) / hpMax + 0.7;
@@ -350,7 +350,7 @@ class BloodSplatter {
     }
   }
   static getImpactScaleWounds(actor, updates, diff) {
-    const hpMax = BloodSplatter.getHpMax(actor.data);
+    const hpMax = BloodSplatter.getHpMax(actor);
     const oldHpVal = diff.oldHpVal; //BloodSplatter.getHpVal(actor.data);
     const hpVal = BloodSplatter.getHpVal(updates);
     const impactScale = (hpVal - oldHpVal) / hpMax + 0.7;
@@ -401,7 +401,7 @@ Hooks.once("socketlib.ready", () => {
 });
 
 Hooks.on("preUpdateActor", function (actor, updates, diff) {
-  diff.oldHpVal = BloodSplatter.getHpVal(actor.data);
+  diff.oldHpVal = BloodSplatter.getHpVal(actor);
 });
 
 Hooks.on("updateActor", function (actor, updates, diff) {

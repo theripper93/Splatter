@@ -226,7 +226,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "data.details.type.value",
+    default: "details.type.value",
   });
 
   game.settings.register("splatter", "creatureTypeCustom", {
@@ -235,7 +235,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "data.details.type.custom",
+    default: "details.type.custom",
   });
 
   game.settings.register("splatter", "BloodSheetData", {
@@ -273,7 +273,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "data.attributes.hp.value",
+    default: "attributes.hp.value",
   });
 
   game.settings.register("splatter", "maxHp", {
@@ -282,7 +282,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "data.attributes.hp.max",
+    default: "attributes.hp.max",
   });
 
   game.settings.register("splatter", "useWounds", {
