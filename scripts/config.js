@@ -21,23 +21,8 @@ Hooks.once("init", function () {
     type: Boolean,
     default: true,
     onChange: function (sett) {
-      if (!sett && canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Destroy();
-      }
-      if (!sett) {
-        libWrapper.unregister(
-          "splatter",
-          "Token.prototype.animate",
-          false
-        );
-      } else {
-      if(game.settings.get("splatter", "enableBloodTrail")){
-        libWrapper.register(
-          "splatter",
-          "Token.prototype.animate",
-          BloodSplatter.bloodTrailOnTickWrapper
-        );
-      }
+      if (!sett && canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Destroy();
       }
     },
   });
@@ -55,8 +40,8 @@ Hooks.once("init", function () {
     },
     default: 1,
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -74,8 +59,8 @@ Hooks.once("init", function () {
     },
     default: 0,
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -88,8 +73,8 @@ Hooks.once("init", function () {
     type: Boolean,
     default: true,
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -102,29 +87,11 @@ Hooks.once("init", function () {
     type: Boolean,
     default: false,
     onChange: function (sett) {
-      if (sett && game.settings.get("splatter", "enableBloodsplatter")) {
-        libWrapper.register(
-          "splatter",
-          "Token.prototype.animate",
-          BloodSplatter.bloodTrailOnTickWrapper
-        );
-      } else {
-        libWrapper.unregister(
-          "splatter",
-          "Token.prototype.animate",
-          false
-        );
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
-
-  if (game.settings.get("splatter", "enableBloodTrail") === true && game.settings.get("splatter", "enableBloodsplatter")===true) {
-    libWrapper.register(
-      "splatter",
-      "Token.prototype.animate",
-      BloodSplatter.bloodTrailOnTickWrapper
-    );
-  }
 
   game.settings.register("splatter", "useBloodsheet", {
     name: game.i18n.localize("splatter.settings.useBloodsheet.text"),
@@ -134,8 +101,8 @@ Hooks.once("init", function () {
     type: Boolean,
     default: true,
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -153,8 +120,8 @@ Hooks.once("init", function () {
     },
     default: 50,
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -172,8 +139,8 @@ Hooks.once("init", function () {
     },
     default: 0.5,
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -186,8 +153,8 @@ Hooks.once("init", function () {
     type: Number,
     default: 500,
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -200,8 +167,8 @@ Hooks.once("init", function () {
     type: Boolean,
     default: false,
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -214,8 +181,8 @@ Hooks.once("init", function () {
     type: Boolean,
     default: false,
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -261,8 +228,8 @@ Hooks.once("init", function () {
       undead: "#440707d8",
     },
     onChange: function () {
-      if (canvas.background.BloodSplatter) {
-        canvas.background.BloodSplatter.Update();
+      if (canvas.primary.BloodSplatter) {
+        canvas.primary.BloodSplatter.Update();
       }
     },
   });
@@ -296,6 +263,7 @@ Hooks.once("init", function () {
 });
 
 Hooks.once("ready", function () {
+  canvas.app.ticker.add(BloodSplatter.bloodTrailTicker)
   new window.Ardittristan.ColorSetting("splatter", "bloodColor", {
     name: game.i18n.localize("splatter.settings.bloodColor.text"),
     hint: game.i18n.localize("splatter.settings.bloodColor.hint"),
@@ -304,8 +272,8 @@ Hooks.once("ready", function () {
     defaultColor: "#a51414d8",
     scope: "world",
     onChange: function () {
-      if (canvas.background.Bloodsplatter) {
-        canvas.background.Bloodsplatter.Update();
+      if (canvas.primary.Bloodsplatter) {
+        canvas.primary.Bloodsplatter.Update();
       }
     },
   });
@@ -353,8 +321,8 @@ Hooks.on("getSceneControlButtons", (controls, b, c) => {
         button: true,
         visible: game.settings.get("splatter", "enableBloodsplatter"),
         onClick: () => {
-          if (canvas.background.BloodSplatter)
-            canvas.background.BloodSplatter.Destroy();
+          if (canvas.primary.BloodSplatter)
+            canvas.primary.BloodSplatter.Destroy();
         },
       }
     );

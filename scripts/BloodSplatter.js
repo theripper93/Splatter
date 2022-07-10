@@ -120,6 +120,7 @@ class BloodSplatter {
     this.wallsBlock = game.settings.get("splatter", "wallsBlockBlood");
     this.inCombat = game.settings.get("splatter", "onlyInCombat");
     this.cleanup = game.settings.get("splatter", "cleanup");
+    this.bloodTrail = game.settings.get("splatter", "enableBloodTrail");
     this.scaleMulti =
       (canvas.dimensions.size / 100) *
       game.settings.get("splatter", "bloodsplatterScale");
@@ -185,6 +186,14 @@ class BloodSplatter {
     return g;
   }
 
+  static bloodTrailTicker(){
+    if(!canvas.primary?.BloodSplatter?.bloodTrail) return;
+    for ( const [animationName, animation] of Object.entries(CanvasAnimation.animations) ) {
+      if ( !( animation.context instanceof Token) ) continue;
+      BloodSplatter.bloodTrail.bind(animation.context)();    
+    }
+  }
+
   static bloodTrailOnTickWrapper(wrapped, ...args){
     args[1] = args[1] ?? {};
     const _this = this;
@@ -199,7 +208,7 @@ class BloodSplatter {
         return wrapped(...args);
   }
 
-  static bloodTrail(wrapped, ...args) {
+  static bloodTrail() {
     if (
       this.actor &&
       !this.bleeding &&
