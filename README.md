@@ -9,6 +9,7 @@ On some systems the `Creature Type` and `Custom Creature Type` options might cau
 
 ## CONFIGURATIONS
 
+If you manually added the data paths for your System to splatter, please send in a PR for config.js (https://github.com/theripper93/Splatter/blob/main/scripts/config.js)
 For information on how to configure Splatter for your system please read this https://github.com/theripper93/Splatter/blob/main/CONFIGURATIONS.MD
 You are also free to send in PRs with configurations for missing systems!
 
