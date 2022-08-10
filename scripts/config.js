@@ -1,4 +1,41 @@
 Hooks.once("init", function () {
+
+  /**************************
+   * SPLATTER DATA PATHS *
+   **************************/
+
+  const dataPaths = {
+    "dnd5e": {
+      creatureType: "details.type.value",
+      creatureTypeCustom: "details.type.custom",
+      currentHp: "attributes.hp.value",
+      maxHp: "attributes.hp.max",
+      useWounds: false,
+    },
+    "pf1e": {
+      creatureType: "details.type.value",
+      creatureTypeCustom: "details.type.custom",
+      currentHp: "attributes.hp.value",
+      maxHp: "attributes.hp.max",
+      useWounds: false,
+    },
+    "pf2e": {
+      creatureType: "details.type.value",
+      creatureTypeCustom: "details.type.custom",
+      currentHp: "attributes.hp.value",
+      maxHp: "attributes.hp.max",
+      useWounds: false,
+    },
+    "sw5e": {
+      creatureType: "details.type.value",
+      creatureTypeCustom: "details.type.custom",
+      currentHp: "attributes.hp.value",
+      maxHp: "attributes.hp.max",
+      useWounds: false,
+    },
+  }
+
+
   /**************************
    * BLOODSPLATTER SETTINGS *
    **************************/
@@ -193,7 +230,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "details.type.value",
+    default: dataPaths[game.system.id]?.creatureType ?? "",
   });
 
   game.settings.register("splatter", "creatureTypeCustom", {
@@ -202,7 +239,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "details.type.custom",
+    default: dataPaths[game.system.id]?.creatureTypeCustom ?? "",
   });
 
   game.settings.register("splatter", "BloodSheetData", {
@@ -240,7 +277,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "attributes.hp.value",
+    default: dataPaths[game.system.id]?.currentHp ?? "attributes.hp.value",
   });
 
   game.settings.register("splatter", "maxHp", {
@@ -249,7 +286,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: String,
-    default: "attributes.hp.max",
+    default: dataPaths[game.system.id]?.maxHp ?? "attributes.hp.max",
   });
 
   game.settings.register("splatter", "useWounds", {
@@ -258,7 +295,7 @@ Hooks.once("init", function () {
     scope: "world",
     config: true,
     type: Boolean,
-    default: false,
+    default: dataPaths[game.system.id]?.useWounds ?? false,
   });
 });
 

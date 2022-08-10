@@ -268,8 +268,10 @@ class BloodSplatter {
     if (!actor) return false;
     const hpMax = BloodSplatter.getHpMax(actor);
     const hpVal = BloodSplatter.getHpVal(actor);
+    const useWounds = game.settings.get("splatter", "useWounds");
+    const threshold = useWounds ? (100 * (hpMax - hpVal)) / hpMax : (100 * hpVal) / hpMax;
     if (
-      (100 * hpVal) / hpMax <=
+      threshold <=
       game.settings.get("splatter", "bloodsplatterThreshold")
     )
       return true;
