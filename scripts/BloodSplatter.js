@@ -1,6 +1,7 @@
 class BloodSplatter {
   constructor() {
     this.blood = new PIXI.Container();
+    this.decalMaterials = {};
     this.Update();
     canvas.primary.addChild(this.blood);
     canvas.primary.BloodSplatter = this;
@@ -49,7 +50,7 @@ class BloodSplatter {
       extraScale;
     const violence = isTrail ? 1 : this.violence;
     if(!isTrail && game.Levels3DPreview?._active){
-      return this.splat3D(splatScale, colorData?.color, colorData?.alpha,token);
+      return this.splat3D(splatScale, colorData?.color, colorData?.alpha,token, violence);
     }
     let splatContainer = new PIXI.Container();
     splatContainer.x = token.center.x;
@@ -75,29 +76,46 @@ class BloodSplatter {
     this.blood.addChild(splatContainer);
   }
 
-  splat3D(scale, color, alpha,token){
+  splat3D(scale, color, alpha,token, count){
     color = color ?? this.color;
     alpha = alpha ?? this.alpha;
     color = color.replace("0x", "#");
-    const count = 10;
     if(game.Levels3DPreview.tokens[token.id]) game.Levels3DPreview.tokens[token.id].animationHandler.playAnimation("shake");
+    const THREE = game.Levels3DPreview.THREE;
+    const DecalGeometry = game.Levels3DPreview.CONFIG.THREEUTILS.DecalGeometry;
+    const position = game.Levels3DPreview.tokens[token.id].head;
+    const targetp = position.clone();
+    targetp.y -= 999999;
+    const intersects = game.Levels3DPreview.interactionManager.computeSightCollisionFrom3DPositions(position,targetp, "collision", false, false, false, true)
+    if(!intersects[0]) return;
+    const intersect = intersects[0];
+    const rotation = new THREE.Matrix4();
+    rotation.lookAt(position, intersect.point, new THREE.Vector3(0,1,0));
+
+    scale *= 1.1 * canvas.grid.size / game.Levels3DPreview.factor;
+    const euler = new THREE.Euler().setFromRotationMatrix(rotation);
+    const geometry =  new DecalGeometry( intersect.object, intersect.point, euler, new THREE.Vector3(scale,scale,scale) );
     for(let i = 0; i < count; i++){
-      new Particle3D("r")
-      .from(token)
-      .to(token)
-      .sprite(`modules/splatter/bloodsplats/blood${Math.floor(Math.random() * 26)}.svg`)
-      .color(color,color)
-      .emitterSize(10*scale)
-      .force(0,300)
-      .push(100,100,100)
-      .life(1000)
-      .speed(0.1)
-      .mass(0)
-      .scale(0.7*scale,2*scale)
-      .rate(2,16)
-      .duration(200)
-      .startAfter(Math.random()*200)
-      .start(false);
+      const sprite = `modules/splatter/bloodsplats/blood${Math.floor(Math.random() * 26)}.svg`;
+      let material;
+      if(this.decalMaterials[`${sprite}|${color}`]){
+        material = this.decalMaterials[`${sprite}|${color}`];
+      }else{
+        material = new THREE.MeshStandardMaterial({
+          map: new THREE.TextureLoader().load(sprite),
+          alphaTest: 0.5,
+          color: new THREE.Color(color),
+          polygonOffset: true,
+          polygonOffsetFactor: -1,
+          roughness: 1,
+          metalness: 0,
+        });
+        this.decalMaterials[`${sprite}|${color}`] = material;
+      }
+      const mesh = new THREE.Mesh( geometry, material );
+      mesh.reciveShadow = true;
+      mesh.name = "splatter";
+      game.Levels3DPreview.scene.add( mesh );
     }
   }
 
@@ -259,6 +277,9 @@ class BloodSplatter {
   }
 
   static clearAll() {
+    if(game.Levels3DPreview?._active){
+      game.Levels3DPreview.scene.children = game.Levels3DPreview.scene.children.filter(child => child.name !== "splatter");
+    }
     if (canvas.primary.BloodSplatter) {
       canvas.primary.BloodSplatter.Destroy();
     }

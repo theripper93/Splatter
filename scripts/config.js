@@ -358,8 +358,7 @@ Hooks.on("getSceneControlButtons", (controls, b, c) => {
         button: true,
         visible: game.settings.get("splatter", "enableBloodsplatter"),
         onClick: () => {
-          if (canvas.primary.BloodSplatter)
-            canvas.primary.BloodSplatter.Destroy();
+          BloodSplatter.clearAll()
         },
       }
     );
