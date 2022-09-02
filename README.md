@@ -3,6 +3,10 @@
 
 ![Latest Release Download Count](https://img.shields.io/github/downloads/theripper93/Splatter/latest/module.zip?color=2b82fc&label=DOWNLOADS&style=for-the-badge) [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fsplatter&colorB=03ff1c&style=for-the-badge)](https://forge-vtt.com/bazaar#package=splatter) ![Foundry Core Compatible Version](https://img.shields.io/badge/dynamic/json.svg?url=https%3A%2F%2Fraw.githubusercontent.com%2Ftheripper93%2FSplatter%2Fmain%2Fmodule.json&label=Foundry%20Version&query=$.compatibleCoreVersion&colorB=orange&style=for-the-badge) [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/theripper93) [![alt-text](https://img.shields.io/badge/-Discord-%235662f6?style=for-the-badge)](https://discord.gg/F53gBjR97G)
 
+## V10 Data Path update
+
+When updating to V10 you will probably need to update your datapaths, this basically means removing any `data` from the path, for example for dnd5e it would be `attributes.hp.value` as you can see the `data.` is no longer in the path.
+
 ## ATTENTION!
 
 On some systems the `Creature Type` and `Custom Creature Type` options might cause Splatter to not work correctly, simply go into the module settings for Splatter and empty both those settings leaving them blank.
