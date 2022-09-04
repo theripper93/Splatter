@@ -184,8 +184,8 @@ class BloodSplatter {
 
   creatureType(token) {
     return (
-      BloodSplatter.getCreatureTypeCustom(token.actor.data) ||
-      BloodSplatter.getCreatureType(token.actor.data)
+      BloodSplatter.getCreatureTypeCustom(token.actor) ||
+      BloodSplatter.getCreatureType(token.actor)
     );
   }
 
