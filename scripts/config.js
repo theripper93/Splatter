@@ -322,7 +322,7 @@ Hooks.on("renderTokenConfig", (app, html, data) => {
     <label>${game.i18n.localize("splatter.tokenconfig.bloodColor.name")}</label>
     <input type="text" name="flags.splatter.bloodColor" is="colorpicker-input" data-responsive-color value="${bloodColor}">
   </div> `;
-  const tinthtml = html.find('input[name="tint"]');
+  const tinthtml = html.find('input[name="texture.tint"]');
   const formGroup = tinthtml.closest(".form-group");
   formGroup.after(newHtml);
   html.find('input[name="flags.splatter.bloodColor"]').value = bloodColor;
