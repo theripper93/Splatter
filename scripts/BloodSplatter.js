@@ -388,7 +388,7 @@ class BloodSplatter {
     const impactScale = (hpVal - oldHpVal) / hpMax + 0.7;
     if (hpVal != undefined &&
       hpVal >= oldHpVal &&
-      (100 * hpVal) / hpMax >=
+      (100 * (hpMax - hpVal)) / hpMax <=
       game.settings.get("splatter", "bloodsplatterThreshold")) {
       return impactScale;
     }else{
@@ -446,7 +446,6 @@ Hooks.on("updateActor", function (actor, updates, diff) {
     ? canvas.tokens.get(actor.parent.id)
     : canvas.tokens.placeables.find((t) => t.actor?.id == actor.id);
   if (!token) return;
-
   const impactScale = BloodSplatter.getImpactScale(actor, updates, diff);
   if( impactScale ) BloodSplatter.executeSplat(token, impactScale);
 });
