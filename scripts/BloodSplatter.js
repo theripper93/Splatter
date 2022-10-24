@@ -184,8 +184,8 @@ class BloodSplatter {
 
   creatureType(token) {
     return (
-      BloodSplatter.getCreatureTypeCustom(token.actor.data) ||
-      BloodSplatter.getCreatureType(token.actor.data)
+      BloodSplatter.getCreatureTypeCustom(token.actor) ||
+      BloodSplatter.getCreatureType(token.actor)
     );
   }
 
@@ -309,13 +309,13 @@ class BloodSplatter {
   }
   static getCreatureType(actorData) {
     return getProperty(
-      actorData,
+      actorData.system,
       game.settings.get("splatter", "creatureType")
     );
   }
   static getCreatureTypeCustom(actorData) {
     return getProperty(
-      actorData,
+      actorData.system,
       game.settings.get("splatter", "creatureTypeCustom")
     );
   }
