@@ -5,6 +5,8 @@ class BloodSplatter {
     this.Update();
     canvas.primary.addChild(this.blood);
     canvas.primary.BloodSplatter = this;
+    this.blood.elevation = canvas.primary.background.elevation;
+    this.blood.sort = 1e10;
   }
 
   Splat(scale, color, alpha) {
