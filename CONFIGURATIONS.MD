@@ -1,10 +1,12 @@
 
 # PF1
 
-![image](https://user-images.githubusercontent.com/1346839/161739973-90180e30-4e59-426f-8d01-a6caf0ecc1a4.png)
-
-Creature Type (and Custom): document.race.document.data.creatureType
-Leave HP as is.
+| Field | Value |
+|:---|:---|
+| Creature Type | creatureType |
+| Custom Creature Type | creatureType |
+| Current HP | attributes.hp.value |
+| Max HP | attributes.hp.max |
 
 Here's a script macro to setup some default colors for the different creature types found in pf1
 
@@ -36,8 +38,8 @@ game.settings.set("splatter", "BloodSheetData", bloodSheetData);
 |:---|:---|
 | Creature Type | type |
 | Custom Creature Type | type |
-| Current HP | data.header.health.value |
-| Max HP | data.header.health.max |
+| Current HP | header.health.value |
+| Max HP | header.health.max |
 
 2. Script macro to set default colors: red for human blood, white-ish for synthetics' fluid, and green for xenomorph's acid. (Remember that *Automatic Blood Color* must be enabled in the module's settings.)
 
