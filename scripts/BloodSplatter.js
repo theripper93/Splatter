@@ -47,7 +47,7 @@ class BloodSplatter {
       colorData = this.ColorStringToHexAlpha(colorFlag);
     }
     const splatScale =
-      ((token.document.texture.scaleX + token.document.texture.scaleY)/2) *
+      ((Math.abs(token.document.texture.scaleX) + Math.abs(token.document.texture.scaleY))/2) *
       Math.max(token.document.width, token.document.height) *
       extraScale;
     const violence = isTrail ? 1 : this.violence;
@@ -353,6 +353,8 @@ class BloodSplatter {
 
     BloodSplatterSocket.executeForEveryone("ClearAll");
   }
+
+
   static generateSplat(token, impactScale) {
     if (!canvas.primary.BloodSplatter) {
       new BloodSplatter();
