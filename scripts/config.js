@@ -40,6 +40,13 @@ Hooks.once("init", function () {
       maxHp: "header.health.max",
       useWounds: false,
     },
+    "yzecoriolis": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "hitPoints.value",
+      maxHp: "hitPoints.max",
+      useWounds: false,
+    }
   }
 
 
