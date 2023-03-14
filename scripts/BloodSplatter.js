@@ -310,10 +310,7 @@ class BloodSplatter {
     return getProperty(actor.system ?? actor, game.settings.get("splatter", "maxHp"));
   }
   static getCreatureType(actorData) {
-    return getProperty(
-      actorData.system,
-      game.settings.get("splatter", "creatureType")
-    );
+    return getProperty(actorData.system, game.settings.get("splatter", "creatureType")) ?? actorData.type;
   }
   static getCreatureTypeCustom(actorData) {
     return getProperty(
