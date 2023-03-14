@@ -33,6 +33,13 @@ Hooks.once("init", function () {
       maxHp: "attributes.hp.max",
       useWounds: false,
     },
+    "alienrpg": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "header.health.value",
+      maxHp: "header.health.max",
+      useWounds: false,
+    },
   }
 
 
