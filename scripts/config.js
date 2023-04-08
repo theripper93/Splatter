@@ -46,6 +46,13 @@ Hooks.once("init", function () {
       currentHp: "hitPoints.value",
       maxHp: "hitPoints.max",
       useWounds: false,
+    },
+    "swade": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "wounds.value",
+      maxHp: "wounds.max",
+      useWounds: true,
     }
   }
 
