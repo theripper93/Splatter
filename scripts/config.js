@@ -53,6 +53,13 @@ Hooks.once("init", function () {
       currentHp: "wounds.value",
       maxHp: "wounds.max",
       useWounds: true,
+    },
+    "ds4": {
+      creatureType: "baseInfo.creatureType",
+      creatureTypeCustom: "",
+      currentHp: "combatValues.hitPoints.value",
+      maxHp: "combatValues.hitPoints.max",
+      useWounds: false,
     }
   }
 
