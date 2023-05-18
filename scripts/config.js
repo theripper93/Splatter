@@ -210,7 +210,7 @@ Hooks.once("init", function () {
     },
   });
 
-  game.settings.register("splatter", "syncWithAA", {
+  /*game.settings.register("splatter", "syncWithAA", {
     name: game.i18n.localize("splatter.settings.syncWithAA.text"),
     hint: game.i18n.localize("splatter.settings.syncWithAA.hint"),
     scope: "world",
@@ -222,7 +222,7 @@ Hooks.once("init", function () {
         canvas.primary.BloodSplatter.Update();
       }
     },
-  });
+  });*/
 
   game.settings.register("splatter", "creatureType", {
     name: game.i18n.localize("splatter.settings.creatureType.text"),

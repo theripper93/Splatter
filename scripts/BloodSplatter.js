@@ -398,30 +398,9 @@ class BloodSplatter {
   }
   static executeSplat(token, impactScale) {
     const delay = game.settings.get("splatter", "bloodsplatterDelay");
-    if (game.settings.get("splatter", "syncWithAA")) {
-      setTimeout(function () {
-        if (game.isAAPlaying) {
-          const hookId = Hooks.on("aa.animationEnd", (sourceToken, target) => {
-            if (!target || target == "no-target") {
-              Hooks.off("aa.animationEnd", hookId);
-              return;
-            }
-            if (target.id == token.id) {
-              Hooks.off("aa.animationEnd", hookId);
-              BloodSplatter.generateSplat(token, impactScale);
-            }
-          });
-        } else {
-          setTimeout(function () {
-            BloodSplatter.generateSplat(token, impactScale);
-          }, delay);
-        }
-      }, 300);
-    } else {
-      setTimeout(function () {
-        BloodSplatter.generateSplat(token, impactScale);
-      }, delay);
-    }
+    setTimeout(function () {
+      BloodSplatter.generateSplat(token, impactScale);
+    }, delay);
   }
 }
 
