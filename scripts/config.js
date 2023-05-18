@@ -33,6 +33,34 @@ Hooks.once("init", function () {
       maxHp: "attributes.hp.max",
       useWounds: false,
     },
+    "alienrpg": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "header.health.value",
+      maxHp: "header.health.max",
+      useWounds: false,
+    },
+    "yzecoriolis": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "hitPoints.value",
+      maxHp: "hitPoints.max",
+      useWounds: false,
+    },
+    "swade": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "wounds.value",
+      maxHp: "wounds.max",
+      useWounds: true,
+    },
+    "ds4": {
+      creatureType: "baseInfo.creatureType",
+      creatureTypeCustom: "",
+      currentHp: "combatValues.hitPoints.value",
+      maxHp: "combatValues.hitPoints.max",
+      useWounds: false,
+    }
   }
 
 
