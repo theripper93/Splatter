@@ -60,6 +60,13 @@ Hooks.once("init", function () {
       currentHp: "combatValues.hitPoints.value",
       maxHp: "combatValues.hitPoints.max",
       useWounds: false,
+    },
+    "cyberpunk-red-core": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "derivedStats.hp.value",
+      maxHp: "derivedStats.hp.max",
+      useWounds: false,
     }
   }
 
