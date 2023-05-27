@@ -19,8 +19,8 @@ class BloodSplatter {
         )}.svg`
       ];
     let sprite = cachedTex
-      ? new PIXI.Sprite.from(cachedTex)
-      : new PIXI.Sprite.from(
+      ? PIXI.Sprite.from(cachedTex)
+      : PIXI.Sprite.from(
           `modules/splatter/bloodsplats/blood${Math.floor(
             Math.random() * 26
           )}.svg`
