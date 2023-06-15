@@ -41,7 +41,17 @@ class BloodSplatter {
     let colorData = {};
     if (!colorFlag && this.bloodSheet) {
       const creatureType = this.creatureType(token);
-      colorData = this.ColorStringToHexAlpha(this.bloodSheetData[creatureType]);
+      let bloodSheetColor;
+      if (Array.isArray(creatureType)) {
+        creatureType.forEach((type) => {
+          if (this.bloodSheetData[type]) {
+            bloodSheetColor = this.bloodSheetData[type];
+          }
+        });
+      } else {
+        bloodSheetColor = this.bloodSheetData[creatureType];
+      }
+      colorData = this.ColorStringToHexAlpha(bloodSheetColor);
     }
     if (colorFlag) {
       colorData = this.ColorStringToHexAlpha(colorFlag);
