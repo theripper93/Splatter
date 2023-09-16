@@ -349,10 +349,10 @@ class BloodSplatter {
     let blob = await res.blob();
     const filename = `${canvas.scene.name}.${randomID(20)}.png`;
     let file = new File([blob], filename, { type: "image/png" });
-    await FilePicker.upload("data", "splatter", file, {});
+    const f = await FilePicker.upload("data", "splatter", file, {});
 
     await canvas.scene.createEmbeddedDocuments("Tile",[{
-      img: `splatter/${filename}`,
+      img: f.path,
       height: container.height,
       width: container.width,
       x: x,
