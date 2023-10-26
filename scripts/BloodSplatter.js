@@ -1,13 +1,9 @@
 class BloodSplatter {
   constructor() {
-    this.blood = new PIXI.Container();
+    this.containerManager = new BloodSplatterContainerManager();
     this.decalMaterials = {};
     this.Update();
-    canvas.primary.addChild(this.blood);
     canvas.primary.BloodSplatter = this;
-    this.blood.elevation = new TileDocument({width: 1, height: 1}).elevation;
-    if (this.blood.elevation == -Infinity) this.blood.elevation = -1e10;
-    this.blood.sort = 1e10;
   }
 
   Splat(scale, color, alpha) {
@@ -86,7 +82,7 @@ class BloodSplatter {
         splatContainer.mask = mask;
       }
     }
-    this.blood.addChild(splatContainer);
+    this.containerManager.getContainer(token.document?.elevation).addChild(splatContainer);
   }
 
   splat3D(scale, color, alpha,token, count){
@@ -134,7 +130,7 @@ class BloodSplatter {
 
 
   Destroy() {
-    this.blood.destroy({ children: true, texture: true });
+    this.containerManager.destroyAll();
     canvas.primary.BloodSplatter = null;
   }
 
@@ -159,19 +155,22 @@ class BloodSplatter {
 
   Cleanup() {
     if (!this.cleanup) return;
-    if (this.blood.children.length > (12 - this.cleanup) * 10) {
-      for (let container of this.blood.children) {
-        if (!container.cleaningUP) {
-          container.cleaningUP = true;
-          this.fadeOut(container);
-          return;
-        }
+
+    const allSplats = this.containerManager.getAllSplats();
+
+    if (allSplats.length < (12 - this.cleanup) * 10) return;
+
+    for (const splat of allSplats) {
+      if (!splat.cleaningUP) {
+        splat.cleaningUP = true;
+        this.fadeOut(splat);
+        return;
       }
     }
   }
 
   fadeOut(container) {
-    let _blood = this.blood;
+    let _blood = container.parent;
     let _this = container;
     function Animate() {
       if (_this._destroyed) {
@@ -413,6 +412,45 @@ class BloodSplatter {
       BloodSplatter.generateSplat(token, impactScale);
     }, delay);
   }
+}
+
+class BloodSplatterContainerManager{
+  constructor () {
+    this.defaultElevation = new TileDocument({width: 1, height: 1}).elevation;
+    if (this.defaultElevation == -Infinity) this.defaultElevation = -1e10;
+    this.sort = 1e10;
+    this.containers = [];
+  }
+  
+  getContainer(elevation) {
+    if (isNaN(elevation)) elevation = this.defaultElevation;
+    return this.containers.find(c => c.elevation == elevation) ?? this.createContainer(elevation);
+  }
+
+  createContainer(elevation) {
+    const container = new PIXI.Container();
+    canvas.primary.addChild(container);
+    container.elevation = elevation;
+    container.sort = this.sort;
+    this.containers.push(container);
+    return container;
+  }
+
+  getAllSplats() {
+    const splats = [];
+    for (const container of this.containers) {
+      splats.push(...container.children)
+    }
+    return splats;
+  }
+
+  destroyAll() {
+    for (const container of this.containers) {
+      canvas.primary.removeChild(container);
+      container.destroy({ children: true, texture: true });
+    }
+  }
+  
 }
 
 let BloodSplatterSocket;
