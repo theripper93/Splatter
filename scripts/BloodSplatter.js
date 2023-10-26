@@ -433,6 +433,11 @@ class BloodSplatterContainerManager{
     container.elevation = elevation;
     container.sort = this.sort;
     this.containers.push(container);
+    Object.defineProperty(container, "visible", {
+      get: () => {
+        return CONFIG?.Levels?.currentToken?.losHeight >= elevation ?? true;
+      }
+    })
     return container;
   }
 
