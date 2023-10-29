@@ -1,5 +1,13 @@
-2023/10/26-14:00:02.405 3b48 Log #309: 0 ops saved to Table #310 OK
-2023/10/26-14:00:02.407 3b48 Archiving C:\Users\tspla\AppData\Local\FoundryVTT\Data\modules\splatter\packs\macros/000309.log: OK
-2023/10/26-14:00:02.410 3b48 Table #5: 4 entries OK
-2023/10/26-14:00:02.413 3b48 Archiving C:\Users\tspla\AppData\Local\FoundryVTT\Data\modules\splatter\packs\macros/MANIFEST-000308: OK
-2023/10/26-14:00:02.421 3b48 **** Repaired leveldb C:\Users\tspla\AppData\Local\FoundryVTT\Data\modules\splatter\packs\macros; recovered 1 files; 1377 bytes. Some data may have been lost. ****
+2023/10/28-10:27:51.870 61ac Recovering log #314
+2023/10/28-10:27:51.878 61ac Delete type=0 #314
+2023/10/28-10:27:51.878 61ac Delete type=3 #313
+2023/10/28-10:28:16.190 521c Level-0 table #318: started
+2023/10/28-10:28:16.190 521c Level-0 table #318: 0 bytes OK
+2023/10/28-10:28:16.192 521c Delete type=0 #316
+2023/10/28-10:28:16.192 521c Manual compaction at level-0 from '!macros!0xkDU2f2dzJFeVj3' @ 72057594037927935 : 1 .. '!macros!Fqe8bYO5u9Izswqm' @ 0 : 0; will stop at '!macros!Fqe8bYO5u9Izswqm' @ 4 : 1
+2023/10/28-10:28:16.192 521c Compacting 1@0 + 0@1 files
+2023/10/28-10:28:16.195 521c Generated table #319@0: 4 keys, 1377 bytes
+2023/10/28-10:28:16.195 521c Compacted 1@0 + 0@1 files => 1377 bytes
+2023/10/28-10:28:16.196 521c compacted to: files[ 0 1 0 0 0 0 0 ]
+2023/10/28-10:28:16.196 521c Delete type=2 #5
+2023/10/28-10:28:16.197 521c Manual compaction at level-0 from '!macros!Fqe8bYO5u9Izswqm' @ 4 : 1 .. '!macros!Fqe8bYO5u9Izswqm' @ 0 : 0; will stop at (end)

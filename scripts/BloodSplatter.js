@@ -435,7 +435,7 @@ class BloodSplatterContainerManager{
     this.containers.push(container);
     Object.defineProperty(container, "visible", {
       get: () => {
-        return CONFIG?.Levels?.currentToken?.losHeight >= elevation ?? true;
+        return CONFIG?.Levels?.currentToken?.losHeight !== undefined ? CONFIG?.Levels?.currentToken?.losHeight >= elevation : true;
       }
     })
     return container;
