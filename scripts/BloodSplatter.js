@@ -93,12 +93,20 @@ class BloodSplatter {
     color = color ?? this.color;
     alpha = alpha ?? this.alpha;
     color = color.replace("0x", "#");
-    if(game.Levels3DPreview.tokens[token.id]) game.Levels3DPreview.tokens[token.id].animationHandler.playAnimation("shake");
+    const token3d = game.Levels3DPreview.tokens[token.id];
+    if(token3d) token3d.animationHandler.playAnimation("shake");
     const THREE = game.Levels3DPreview.THREE;
     const DecalGeometry = game.Levels3DPreview.CONFIG.THREEUTILS.DecalGeometry;
-    const position = game.Levels3DPreview.tokens[token.id].head;
-    const targetp = position.clone();
+    const position = token3d.head;
+    let targetp = position.clone();
     targetp.y -= 999999;
+    if (token3d.lastParticleOrigin) {
+      const currentRayDirection = targetp.clone().sub(position).normalize();
+      const lastRayDirection = token3d.lastParticleOrigin.clone().sub(position).normalize();
+      const averageDirection = currentRayDirection.sub(lastRayDirection.clone().normalize()).normalize();
+      //const averageDirection = position.clone().sub(token3d.lastParticleOrigin).normalize();
+      targetp = position.clone().add(averageDirection.multiplyScalar(999999));
+    }
     const intersects = game.Levels3DPreview.interactionManager.computeSightCollisionFrom3DPositions(position,targetp, "collision", false, false, false, true)
     if(!intersects[0]) return;
     const intersect = intersects[0];
