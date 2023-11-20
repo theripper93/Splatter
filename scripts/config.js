@@ -67,6 +67,13 @@ Hooks.once("init", function () {
       currentHp: "derivedStats.hp.value",
       maxHp: "derivedStats.hp.max",
       useWounds: false,
+    },
+    "demonlord": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "characteristics.health.value",
+      maxHp: "characteristics.health.max",
+      useWounds: true,
     }
   }
 
