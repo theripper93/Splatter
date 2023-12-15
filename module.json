@@ -28,7 +28,6 @@
     }
   ],
   "scripts": [
-    "scripts/main.js",
     "scripts/config.js",
     "scripts/BloodSplatter.js"
   ],

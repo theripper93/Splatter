@@ -337,34 +337,46 @@ class BloodSplatter {
     );
   }
   static async saveBlood() {
-    let container = new PIXI.Container();
-    let x = Infinity;
-    let y = Infinity;
-    for (let child of canvas.primary.BloodSplatter.blood.children) {
-      let cx = child.position.x - child.width / 2;
-      let cy = child.position.y - child.height / 2;
-      if (cx < x) x = cx;
-      if (cy < y) y = cy;
+    const bgElev = canvas.primary.background.elevation;
+    for (const bloodContainer of canvas.primary.BloodSplatter.containerManager.containers) {
+      let container = new PIXI.Container();
+      let x = Infinity;
+      let y = Infinity;
+      for (let child of bloodContainer.children) {
+        let cx = child.position.x - child.width / 2;
+        let cy = child.position.y - child.height / 2;
+        if (cx < x) x = cx;
+        if (cy < y) y = cy;
+      }
+      container.addChild(bloodContainer);
+      const b64 = await canvas.app.renderer.extract.base64(container, "image/png", 1);
+      try {
+        await FilePicker.createDirectory("data", "splatter");
+      } catch (e) { }
+
+      let res = await fetch(b64);
+      let blob = await res.blob();
+      const filename = `${canvas.scene.name}.${randomID(20)}.png`;
+      let file = new File([blob], filename, {type: "image/png"});
+      const f = await FilePicker.upload("data", "splatter", file, {});
+
+      await canvas.scene.createEmbeddedDocuments("Tile", [{
+        img: f.path,
+        overhead: bgElev !== bloodContainer.elevation,
+        flags: {
+          levels: {
+            rangeBottom: bloodContainer.elevation,
+            rangeTop: bloodContainer.elevation,
+          }
+        },
+        height: container.height,
+        width: container.width,
+        x: x,
+        y: y,
+        z: 1000,
+      }]);
+      
     }
-    container.addChild(canvas.primary.BloodSplatter.blood);
-    const b64 = await canvas.app.renderer.extract.base64(container, "image/png", 1);
-    try{
-            await FilePicker.createDirectory("data", "splatter");
-    }catch(e){}
-
-    let res = await fetch(b64);
-    let blob = await res.blob();
-    const filename = `${canvas.scene.name}.${randomID(20)}.png`;
-    let file = new File([blob], filename, { type: "image/png" });
-    const f = await FilePicker.upload("data", "splatter", file, {});
-
-    await canvas.scene.createEmbeddedDocuments("Tile",[{
-      img: f.path,
-      height: container.height,
-      width: container.width,
-      x: x,
-      y: y,
-    }]);
 
     BloodSplatterSocket.executeForEveryone("ClearAll");
   }
