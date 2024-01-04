@@ -74,9 +74,15 @@ Hooks.once("init", function () {
       currentHp: "characteristics.health.value",
       maxHp: "characteristics.health.max",
       useWounds: true,
+    },
+    "avd12": {
+      creatureType: "creature_type",
+      creatureTypeCustom: "",
+      currentHp: "health.value",
+      maxHp: "health.max",
+      useWounds: false,
     }
   }
-
 
   /**************************
    * BLOODSPLATTER SETTINGS *
