@@ -20,8 +20,8 @@ Hooks.once("init", function () {
       useWounds: false,
     },
     "pf2e": {
-      creatureType: "details.type.value",
-      creatureTypeCustom: "details.type.custom",
+      creatureType: "traits.value",
+      creatureTypeCustom: "",
       currentHp: "attributes.hp.value",
       maxHp: "attributes.hp.max",
       useWounds: false,
