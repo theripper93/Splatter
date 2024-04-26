@@ -81,6 +81,13 @@ Hooks.once("init", function () {
       currentHp: "health.value",
       maxHp: "health.max",
       useWounds: false,
+    },
+    "wfrp4e": {
+      creatureType: "details.species.value",
+      creatureTypeCustom: "",
+      currentHp: "status.wounds.value",
+      maxHp: "status.wounds.max",
+      useWounds: false,
     }
   }
 
