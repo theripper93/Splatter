@@ -47,6 +47,12 @@ class BloodSplatter {
         });
       } else {
         bloodSheetColor = this.bloodSheetData[creatureType];
+        if (!bloodSheetColor) {
+          const matchingKey = Object.keys(this.bloodSheetData).find((key) => creatureType.includes(key));
+          if (matchingKey) {
+            bloodSheetColor = this.bloodSheetData[matchingKey];
+          }
+        }
       }
       colorData = this.ColorStringToHexAlpha(bloodSheetColor);
     }
