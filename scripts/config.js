@@ -88,7 +88,14 @@ Hooks.once("init", function () {
       currentHp: "status.wounds.value",
       maxHp: "status.wounds.max",
       useWounds: false,
-    }
+    },
+    "deltagreen": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "health.value",
+      maxHp: "health.max",
+      useWounds: false,
+    },
   }
 
   /**************************
