@@ -368,10 +368,9 @@ class BloodSplatter {
 
       await canvas.scene.createEmbeddedDocuments("Tile", [{
         img: f.path,
-        overhead: bgElev !== bloodContainer.elevation,
+        elevation: bloodContainer.elevation,
         flags: {
           levels: {
-            rangeBottom: bloodContainer.elevation,
             rangeTop: bloodContainer.elevation,
           }
         },
