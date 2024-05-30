@@ -216,7 +216,7 @@ class BloodSplatter {
   }
 
   static getMask(origin, radius){
-    const fov = CONFIG.Canvas.losBackend.create(origin, {
+    const fov = CONFIG.Canvas.polygonBackends.move.create(origin, {
       type: "move",
       density: 12,
     }).points;
@@ -325,19 +325,19 @@ class BloodSplatter {
     return false;
   }
   static getHpVal(actor) {
-    return getProperty(
+    return foundry.utils.getProperty(
       actor.system ?? actor,
       game.settings.get("splatter", "currentHp")
     );
   }
   static getHpMax(actor) {
-    return getProperty(actor.system ?? actor, game.settings.get("splatter", "maxHp"));
+    return foundry.utils.getProperty(actor.system ?? actor, game.settings.get("splatter", "maxHp"));
   }
   static getCreatureType(actorData) {
-    return getProperty(actorData.system, game.settings.get("splatter", "creatureType")) ?? actorData.type;
+    return foundry.utils.getProperty(actorData.system, game.settings.get("splatter", "creatureType")) ?? actorData.type;
   }
   static getCreatureTypeCustom(actorData) {
-    return getProperty(
+    return foundry.utils.getProperty(
       actorData.system,
       game.settings.get("splatter", "creatureTypeCustom")
     );
@@ -362,7 +362,7 @@ class BloodSplatter {
 
       let res = await fetch(b64);
       let blob = await res.blob();
-      const filename = `${canvas.scene.name}.${randomID(20)}.png`;
+      const filename = `${canvas.scene.name}.${foundry.utils.randomID(20)}.png`;
       let file = new File([blob], filename, {type: "image/png"});
       const f = await FilePicker.upload("data", "splatter", file, {});
 
