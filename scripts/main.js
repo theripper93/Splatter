@@ -1,3 +1,8 @@
+import {BloodSplatter} from "./BloodSplatter.js";
+import { Socket } from "./lib/socket.js";
+
+export const MODULE_ID = "splatter";
+
 Hooks.once("init", function () {
 
   /**************************
@@ -101,6 +106,18 @@ Hooks.once("init", function () {
   /**************************
    * BLOODSPLATTER SETTINGS *
    **************************/
+
+  Socket.register("Splat", BloodSplatter.socketSplatFn);
+  Socket.register("ClearAll", BloodSplatter.clearAll);
+
+  globalThis.CONFIG.Splatter = {
+    clearAll: () => Socket.ClearAll(),
+    splat: (tokens) => Socket.Splat({uuids: tokens.map(t => t.uuid ?? t)}),
+    saveBloodToTile: () => BloodSplatter.saveBlood(),
+  }
+
+
+
   game.isAAPlaying = false;
 
   Hooks.on("aa.preAnimationStart",() => {
@@ -425,3 +442,27 @@ Hooks.on("getSceneControlButtons", (controls, b, c) => {
       }
     );
 });
+
+Hooks.on("preUpdateActor", function (actor, updates, diff) {
+  diff.oldHpVal = BloodSplatter.getHpVal(actor);
+});
+
+Hooks.on("updateActor", function (actor, updates, diff) {
+  if (
+    !game.settings.get("splatter", "enableBloodsplatter") ||
+    (game.settings.get("splatter", "onlyInCombat") && !game.combat?.started)
+  )
+    return;
+  let token = actor.parent
+    ? canvas.tokens.get(actor.parent.id)
+    : canvas.tokens.placeables.find((t) => t.actor?.id == actor.id);
+  if (!token) return;
+  const impactScale = BloodSplatter.getImpactScale(actor, updates, diff);
+  if( impactScale ) BloodSplatter.executeSplat(token, impactScale);
+});
+
+Hooks.on("canvasReady", function () {
+  if (canvas.primary.BloodSplatter)
+    canvas.primary.BloodSplatter.Destroy();
+});
+

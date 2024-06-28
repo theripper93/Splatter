@@ -32,9 +32,8 @@
       "path": "languages/pt-BR.json"
     }
   ],
-  "scripts": [
-    "scripts/config.js",
-    "scripts/BloodSplatter.js"
+  "esmodules": [
+    "scripts/main.js"
   ],
   "packs": [
     {
@@ -51,11 +50,6 @@
   "socket": true,
   "relationships": {
     "requires": [
-      {
-        "id": "socketlib",
-        "type": "module",
-        "compatibility": {}
-      },
       {
         "id": "colorsettings",
         "type": "module",

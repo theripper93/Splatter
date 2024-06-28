@@ -1,4 +1,6 @@
-class BloodSplatter {
+import {Socket} from "./lib/socket.js";
+
+export class BloodSplatter {
   constructor() {
     this.containerManager = new BloodSplatterContainerManager();
     this.decalMaterials = {};
@@ -283,10 +285,10 @@ class BloodSplatter {
     }
   }
 
-  static socketSplatFn(tokenIds) {
+  static socketSplatFn({uuids}) {
     if (!game.settings.get("splatter", "enableBloodsplatter")) return;
-    for (let tokenId of tokenIds) {
-      let token = canvas.tokens.get(tokenId);
+    for (let uuid of uuids) {
+      let token = fromUuidSync(uuid);
       if (!token) return;
       if (canvas.primary.BloodSplatter) {
         canvas.primary.BloodSplatter.SplatFromToken(token);
@@ -299,7 +301,7 @@ class BloodSplatter {
 
   static socketSplat(tokens) {
     let tokenIds = tokens.map((token) => token.id);
-    BloodSplatterSocket.executeForEveryone("Splat", tokenIds);
+    Socket.Splat({tokenIds});
   }
 
   static clearAll() {
@@ -383,7 +385,7 @@ class BloodSplatter {
       
     }
 
-    BloodSplatterSocket.executeForEveryone("ClearAll");
+    Socket.ClearAll();
   }
 
 
@@ -482,35 +484,3 @@ class BloodSplatterContainerManager{
   }
   
 }
-
-let BloodSplatterSocket;
-
-Hooks.once("socketlib.ready", () => {
-  BloodSplatterSocket = socketlib.registerModule("splatter");
-  BloodSplatterSocket.register("Splat", BloodSplatter.socketSplatFn);
-  BloodSplatterSocket.register("ClearAll", BloodSplatter.clearAll);
-});
-
-Hooks.on("preUpdateActor", function (actor, updates, diff) {
-  diff.oldHpVal = BloodSplatter.getHpVal(actor);
-});
-
-Hooks.on("updateActor", function (actor, updates, diff) {
-  if (
-    !game.settings.get("splatter", "enableBloodsplatter") ||
-    (game.settings.get("splatter", "onlyInCombat") && !game.combat?.started)
-  )
-    return;
-  let token = actor.parent
-    ? canvas.tokens.get(actor.parent.id)
-    : canvas.tokens.placeables.find((t) => t.actor?.id == actor.id);
-  if (!token) return;
-  const impactScale = BloodSplatter.getImpactScale(actor, updates, diff);
-  if( impactScale ) BloodSplatter.executeSplat(token, impactScale);
-});
-
-Hooks.on("canvasReady", function () {
-  if (canvas.primary.BloodSplatter)
-    canvas.primary.BloodSplatter.Destroy();
-});
-
