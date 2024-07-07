@@ -289,6 +289,7 @@ export class BloodSplatter {
     if (!game.settings.get("splatter", "enableBloodsplatter")) return;
     for (let uuid of uuids) {
       let token = fromUuidSync(uuid);
+      token = token.object ?? token;
       if (!token) return;
       if (canvas.primary.BloodSplatter) {
         canvas.primary.BloodSplatter.SplatFromToken(token);

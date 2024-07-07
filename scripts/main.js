@@ -112,7 +112,11 @@ Hooks.once("init", function () {
 
   globalThis.CONFIG.Splatter = {
     clearAll: () => Socket.ClearAll(),
-    splat: (tokens) => Socket.Splat({uuids: tokens.map(t => t.uuid ?? t)}),
+    splat: (tokens) => {
+      if (!Array.isArray(tokens)) tokens = [tokens];
+      tokens = tokens.map(t => t.document ?? t);
+      Socket.Splat({uuids: tokens.map(t => t.uuid ?? t)})
+    },
     saveBloodToTile: () => BloodSplatter.saveBlood(),
   }
 
@@ -426,7 +430,7 @@ Hooks.on("getSceneControlButtons", (controls, b, c) => {
               game.i18n.localize("splatter.controls.splatToken.warn")
             );
           } else {
-            BloodSplatter.socketSplat(canvas.tokens.controlled);
+            CONFIG.Splatter.splat(canvas.tokens.controlled);
           }
         },
       },
