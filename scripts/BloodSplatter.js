@@ -446,7 +446,7 @@ class BloodSplatterContainerManager{
   constructor () {
     this.defaultElevation = new TileDocument({width: 1, height: 1}).elevation;
     if (this.defaultElevation == -Infinity) this.defaultElevation = -1e10;
-    this.sort = 1e10;
+    this.sort = 1e100;
     this.containers = [];
   }
   
@@ -460,6 +460,7 @@ class BloodSplatterContainerManager{
     canvas.primary.addChild(container);
     container.elevation = elevation;
     container.sort = this.sort;
+    container.sortLayer = PrimaryCanvasGroup.SORT_LAYERS.TILES + 1;
     this.containers.push(container);
     Object.defineProperty(container, "visible", {
       get: () => {
