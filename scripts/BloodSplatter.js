@@ -370,7 +370,9 @@ export class BloodSplatter {
       const f = await FilePicker.upload("data", "splatter", file, {});
 
       await canvas.scene.createEmbeddedDocuments("Tile", [{
-        img: f.path,
+        texture: {
+          src: f.path,
+        },
         elevation: bloodContainer.elevation,
         flags: {
           levels: {
