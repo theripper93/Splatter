@@ -101,6 +101,13 @@ Hooks.once("init", function () {
       maxHp: "health.max",
       useWounds: false,
     },
+    "shadowrun5e": {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "track.physical.value",
+      maxHp: "track.physical.max",
+      useWounds: true,
+    },
   }
 
   /**************************
