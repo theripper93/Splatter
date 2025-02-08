@@ -5,7 +5,7 @@
 |:---|:---|
 | Creature Type | creatureType |
 | Custom Creature Type | creatureType |
-| Current HP | attributes.hp.value |
+| Current HP | attributes.hp.offset |
 | Max HP | attributes.hp.max |
 
 Here's a script macro to setup some default colors for the different creature types found in pf1
