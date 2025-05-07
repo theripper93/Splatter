@@ -1,65 +1,64 @@
-import {BloodSplatter} from "./BloodSplatter.js";
+import { BloodSplatter } from "./BloodSplatter.js";
 import { Socket } from "./lib/socket.js";
 
 export const MODULE_ID = "splatter";
 
 Hooks.once("init", function () {
-
   /**************************
    * SPLATTER DATA PATHS *
    **************************/
 
   const dataPaths = {
-    "dnd5e": {
+    dnd5e: {
       creatureType: "details.type.value",
       creatureTypeCustom: "details.type.custom",
       currentHp: "attributes.hp.value",
       maxHp: "attributes.hp.max",
       useWounds: false,
     },
-    "pf1e": {
+    pf1e: {
       creatureType: "details.type.value",
       creatureTypeCustom: "details.type.custom",
       currentHp: "attributes.hp.value",
       maxHp: "attributes.hp.max",
       useWounds: false,
     },
-    "pf2e": {
+    pf2e: {
       creatureType: "traits.value",
       creatureTypeCustom: "",
       currentHp: "attributes.hp.value",
       maxHp: "attributes.hp.max",
       useWounds: false,
     },
-    "sw5e": {
+    sw5e: {
       creatureType: "details.type.value",
       creatureTypeCustom: "details.type.custom",
       currentHp: "attributes.hp.value",
       maxHp: "attributes.hp.max",
       useWounds: false,
     },
-    "alienrpg": {
+    alienrpg: {
       creatureType: "",
       creatureTypeCustom: "",
       currentHp: "header.health.value",
       maxHp: "header.health.max",
       useWounds: false,
     },
-    "yzecoriolis": {
+    yzecoriolis: {
       creatureType: "",
       creatureTypeCustom: "",
       currentHp: "hitPoints.value",
       maxHp: "hitPoints.max",
       useWounds: false,
     },
-    "swade": {
+    swade: {
       creatureType: "",
       creatureTypeCustom: "",
       currentHp: "wounds.value",
       maxHp: "wounds.max",
       useWounds: true,
     },
-    "ds4": {
+    ds4: {
       creatureType: "baseInfo.creatureType",
       creatureTypeCustom: "",
       currentHp: "combatValues.hitPoints.value",
@@ -73,42 +72,42 @@ Hooks.once("init", function () {
       maxHp: "derivedStats.hp.max",
       useWounds: false,
     },
-    "demonlord": {
+    demonlord: {
       creatureType: "",
       creatureTypeCustom: "",
       currentHp: "characteristics.health.value",
       maxHp: "characteristics.health.max",
       useWounds: true,
     },
-    "avd12": {
+    avd12: {
       creatureType: "creature_type",
       creatureTypeCustom: "",
       currentHp: "health.value",
       maxHp: "health.max",
       useWounds: false,
     },
-    "wfrp4e": {
+    wfrp4e: {
       creatureType: "details.species.value",
       creatureTypeCustom: "",
       currentHp: "status.wounds.value",
       maxHp: "status.wounds.max",
       useWounds: false,
     },
-    "deltagreen": {
+    deltagreen: {
       creatureType: "",
       creatureTypeCustom: "",
       currentHp: "health.value",
       maxHp: "health.max",
       useWounds: false,
     },
-    "shadowrun5e": {
+    shadowrun5e: {
       creatureType: "",
       creatureTypeCustom: "",
       currentHp: "track.physical.value",
       maxHp: "track.physical.max",
       useWounds: true,
     },
-  }
+  };
 
   /**************************
    * BLOODSPLATTER SETTINGS *
@@ -121,24 +120,21 @@ Hooks.once("init", function () {
     clearAll: () => Socket.ClearAll(),
     splat: (tokens) => {
       if (!Array.isArray(tokens)) tokens = [tokens];
-      tokens = tokens.map(t => t.document ?? t);
-      Socket.Splat({uuids: tokens.map(t => t.uuid ?? t)})
+      tokens = tokens.map((t) => t.document ?? t);
+      Socket.Splat({ uuids: tokens.map((t) => t.uuid ?? t) });
     },
     saveBloodToTile: () => BloodSplatter.saveBlood(),
-  }
-
-
+  };
 
   game.isAAPlaying = false;
 
-  Hooks.on("aa.preAnimationStart",() => {
+  Hooks.on("aa.preAnimationStart", () => {
     game.isAAPlaying = true;
-  })
+  });
 
-  Hooks.on("aa.animationEnd",() => {
+  Hooks.on("aa.animationEnd", () => {
     game.isAAPlaying = false;
-  })
-
+  });
 
   game.settings.register("splatter", "enableBloodsplatter", {
     name: game.i18n.localize("splatter.settings.enableBloodsplatter.text"),
@@ -390,20 +386,36 @@ Hooks.once("init", function () {
 });
 
 Hooks.once("ready", function () {
-  canvas.app.ticker.add(BloodSplatter.bloodTrailTicker)
-  new window.Ardittristan.ColorSetting("splatter", "bloodColor", {
-    name: game.i18n.localize("splatter.settings.bloodColor.text"),
-    hint: game.i18n.localize("splatter.settings.bloodColor.hint"),
-    label: game.i18n.localize("splatter.settings.bloodColor.label"),
-    restricted: true,
-    defaultColor: "#a51414d8",
-    scope: "world",
-    onChange: function () {
-      if (canvas.primary.Bloodsplatter) {
-        canvas.primary.Bloodsplatter.Update();
-      }
-    },
-  });
+  canvas.app.ticker.add(BloodSplatter.bloodTrailTicker);
+  if(window.Ardittristan?.ColorSetting){
+    new window.Ardittristan.ColorSetting("splatter", "bloodColor", {
+      name: game.i18n.localize("splatter.settings.bloodColor.text"),
+      hint: game.i18n.localize("splatter.settings.bloodColor.hint"),
+      label: game.i18n.localize("splatter.settings.bloodColor.label"),
+      restricted: true,
+      defaultColor: "#a51414d8",
+      scope: "world",
+      onChange: function () {
+        if (canvas.primary.Bloodsplatter) {
+          canvas.primary.Bloodsplatter.Update();
+        }
+      },
+    });
+  }else{
+    game.settings.register("splatter", "bloodColor", {
+      name: game.i18n.localize("splatter.settings.bloodColor.text"),
+      hint: game.i18n.localize("splatter.settings.bloodColor.hint"),
+      scope: "world",
+      config: true,
+      type: String,
+      default: "#a51414d8",
+      onChange: function () {
+        if (canvas.primary.Bloodsplatter) {
+          canvas.primary.Bloodsplatter.Update();
+        }
+      },
+    });
+  }
 });
 
 Hooks.on("renderTokenConfig", (app, html, data) => {
@@ -420,38 +432,33 @@ Hooks.on("renderTokenConfig", (app, html, data) => {
 });
 
 Hooks.on("getSceneControlButtons", (controls, b, c) => {
-  controls
-    .find((c) => c.name == "token")
-    .tools.push(
-      {
-        name: "splatToken",
-        title: game.i18n.localize("splatter.controls.splatToken.name"),
-        icon: "fas fa-tint",
-        button: true,
-        visible:
-          game.user.isGM &&
-          game.settings.get("splatter", "enableBloodsplatter"),
-        onClick: () => {
-          if (!canvas.tokens.controlled[0]) {
-            ui.notifications.warn(
-              game.i18n.localize("splatter.controls.splatToken.warn")
-            );
-          } else {
-            CONFIG.Splatter.splat(canvas.tokens.controlled);
-          }
-        },
-      },
-      {
-        name: "clearBlood",
-        title: game.i18n.localize("splatter.controls.clearBlood.name"),
-        icon: "fas fa-tint-slash",
-        button: true,
-        visible: game.settings.get("splatter", "enableBloodsplatter"),
-        onClick: () => {
-          BloodSplatter.clearAll()
-        },
+  controls.tokens.tools.splatToken = {
+    name: "splatToken",
+    title: game.i18n.localize("splatter.controls.splatToken.name"),
+    icon: "fas fa-tint",
+    button: true,
+    visible:
+      game.user.isGM && game.settings.get("splatter", "enableBloodsplatter"),
+    onChange: () => {
+      if (!canvas.tokens.controlled[0]) {
+        ui.notifications.warn(
+          game.i18n.localize("splatter.controls.splatToken.warn")
+        );
+      } else {
+        CONFIG.Splatter.splat(canvas.tokens.controlled);
       }
-    );
+    },
+  };
+  controls.tokens.tools.clearBlood = {
+    name: "clearBlood",
+    title: game.i18n.localize("splatter.controls.clearBlood.name"),
+    icon: "fas fa-tint-slash",
+    button: true,
+    visible: game.settings.get("splatter", "enableBloodsplatter"),
+    onChange: () => {
+      BloodSplatter.clearAll();
+    },
+  };
 });
 
 Hooks.on("preUpdateActor", function (actor, updates, diff) {
@@ -469,11 +476,9 @@ Hooks.on("updateActor", function (actor, updates, diff) {
     : canvas.tokens.placeables.find((t) => t.actor?.id == actor.id);
   if (!token) return;
   const impactScale = BloodSplatter.getImpactScale(actor, updates, diff);
-  if( impactScale ) BloodSplatter.executeSplat(token, impactScale);
+  if (impactScale) BloodSplatter.executeSplat(token, impactScale);
 });
 
 Hooks.on("canvasReady", function () {
-  if (canvas.primary.BloodSplatter)
-    canvas.primary.BloodSplatter.Destroy();
+  if (canvas.primary.BloodSplatter) canvas.primary.BloodSplatter.Destroy();
 });
-

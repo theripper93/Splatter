@@ -462,7 +462,7 @@ class BloodSplatterContainerManager{
     canvas.primary.addChild(container);
     container.elevation = elevation;
     container.sort = this.sort;
-    container.sortLayer = PrimaryCanvasGroup.SORT_LAYERS.TILES + 1;
+    container.sortLayer = foundry.canvas.groups.PrimaryCanvasGroup.SORT_LAYERS.TILES + 1;
     this.containers.push(container);
     Object.defineProperty(container, "visible", {
       get: () => {

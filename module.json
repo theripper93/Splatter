@@ -49,7 +49,7 @@
   "download": "https://github.com/theripper93/Splatter/releases/latest/download/module.zip",
   "socket": true,
   "relationships": {
-    "requires": [
+    "recommends": [
       {
         "id": "colorsettings",
         "type": "module",
@@ -58,7 +58,7 @@
     ]
   },
   "compatibility": {
-    "minimum": "12",
-    "verified": "12"
+    "minimum": "13",
+    "verified": "13"
   }
 }
