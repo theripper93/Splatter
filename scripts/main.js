@@ -150,6 +150,20 @@ Hooks.once("init", function () {
     },
   });
 
+  game.settings.register("splatter", "bloodColor", {
+    name: game.i18n.localize("splatter.settings.bloodColor.text"),
+    hint: game.i18n.localize("splatter.settings.bloodColor.hint"),
+    scope: "world",
+    config: true,
+    type: String,
+    default: "#a51414d8",
+    onChange: function () {
+      if (canvas.primary.Bloodsplatter) {
+        canvas.primary.Bloodsplatter.Update();
+      }
+    },
+  });
+
   game.settings.register("splatter", "violence", {
     name: game.i18n.localize("splatter.settings.violence.text"),
     hint: game.i18n.localize("splatter.settings.violence.hint"),
@@ -296,19 +310,6 @@ Hooks.once("init", function () {
     },
   });
 
-  /*game.settings.register("splatter", "syncWithAA", {
-    name: game.i18n.localize("splatter.settings.syncWithAA.text"),
-    hint: game.i18n.localize("splatter.settings.syncWithAA.hint"),
-    scope: "world",
-    config: true,
-    type: Boolean,
-    default: false,
-    onChange: function () {
-      if (canvas.primary.BloodSplatter) {
-        canvas.primary.BloodSplatter.Update();
-      }
-    },
-  });*/
 
   game.settings.register("splatter", "creatureType", {
     name: game.i18n.localize("splatter.settings.creatureType.text"),
@@ -387,49 +388,28 @@ Hooks.once("init", function () {
 
 Hooks.once("ready", function () {
   canvas.app.ticker.add(BloodSplatter.bloodTrailTicker);
-  if(window.Ardittristan?.ColorSetting){
-    new window.Ardittristan.ColorSetting("splatter", "bloodColor", {
-      name: game.i18n.localize("splatter.settings.bloodColor.text"),
-      hint: game.i18n.localize("splatter.settings.bloodColor.hint"),
-      label: game.i18n.localize("splatter.settings.bloodColor.label"),
-      restricted: true,
-      defaultColor: "#a51414d8",
-      scope: "world",
-      onChange: function () {
-        if (canvas.primary.Bloodsplatter) {
-          canvas.primary.Bloodsplatter.Update();
-        }
-      },
-    });
-  }else{
-    game.settings.register("splatter", "bloodColor", {
-      name: game.i18n.localize("splatter.settings.bloodColor.text"),
-      hint: game.i18n.localize("splatter.settings.bloodColor.hint"),
-      scope: "world",
-      config: true,
-      type: String,
-      default: "#a51414d8",
-      onChange: function () {
-        if (canvas.primary.Bloodsplatter) {
-          canvas.primary.Bloodsplatter.Update();
-        }
-      },
-    });
-  }
 });
 
-Hooks.on("renderTokenConfig", (app, html, data) => {
+const renderTokenConfig = (app, html, data) => {
   let bloodColor = app.token.getFlag("splatter", "bloodColor") || "";
   let newHtml = `<div class="form-group">
     <label>${game.i18n.localize("splatter.tokenconfig.bloodColor.name")}</label>
-    <input type="text" name="flags.splatter.bloodColor" is="colorpicker-input" data-responsive-color value="${bloodColor}">
+    <div class="form-fields">
+    <input type="text" name="flags.splatter.bloodColor" value="${bloodColor}">
+    </div>
   </div> `;
-  const tinthtml = html.find('[name="texture.tint"]');
+  const tinthtml = html.querySelector('[name="texture.tint"]');
   const formGroup = tinthtml.closest(".form-group");
-  formGroup.after(newHtml);
-  html.find('input[name="flags.splatter.bloodColor"]').value = bloodColor;
+  formGroup.insertAdjacentHTML("afterend", newHtml);
+  addColorPicker(
+    html.querySelector(`[name="flags.splatter.bloodColor"]`),
+    { opacity: true }
+  );
   app.setPosition({ height: "auto" });
-});
+}
+
+Hooks.on("renderTokenConfig", renderTokenConfig);
+Hooks.on("renderPrototypeTokenConfig", renderTokenConfig);
 
 Hooks.on("getSceneControlButtons", (controls, b, c) => {
   controls.tokens.tools.splatToken = {
@@ -482,3 +462,71 @@ Hooks.on("updateActor", function (actor, updates, diff) {
 Hooks.on("canvasReady", function () {
   if (canvas.primary.BloodSplatter) canvas.primary.BloodSplatter.Destroy();
 });
+
+Hooks.on("renderSettingsConfig", (app, html, data) => {
+  addColorPicker(html.querySelector(`[name="splatter.bloodColor"]`), {opacity: true});
+});
+
+export function addColorPicker(input, {value, opacity = false } = {}) {
+  const hexToComponents = (hex) => {
+    const hexColor = hex.length < 9 ? hex + "f".repeat(9 - hex.length) : hex;
+
+    const colorValue = hexColor.slice(0, 7);
+    const alphaValue = parseInt(hexColor.slice(7, 9), 16) / 255;
+    return { color: colorValue, alpha: alphaValue };
+  };
+
+  const componentsToHex = (color, alpha) => {
+    const colorValue = color.replace("#", "");
+    const alphaValue = Math.round(alpha * 255)
+      .toString(16)
+      .padStart(2, "0");
+    return `#${colorValue}${alphaValue}`;
+  };
+
+  const textInput =
+    input.type === "text" ? input : input.querySelector("input[type='text']");
+  if (textInput.classList.contains("color-picker-added")) return;
+
+  textInput.classList.add("color-picker-added");
+  textInput.classList.add("color");
+  const parent = textInput.parentElement;
+
+  value ??= textInput.value || "#000000ff";
+
+  const { color, alpha } = hexToComponents(value);
+
+  const colorPickerElement = document.createElement("input");
+  colorPickerElement.setAttribute("type", "color");
+  if(opacity) colorPickerElement.style.maxWidth = "2rem";
+
+  const alphaPickerHtml = `<range-picker min="0" max="1" step="0.01" value="${alpha}" data-tooltip="Alpha" style="min-width: 6rem;"></range-picker>`;
+  const alphaPickerElement = new DOMParser()
+    .parseFromString(alphaPickerHtml, "text/html")
+    .querySelector("range-picker");
+
+  const updateTextInput = (color, alpha) => {
+    const hex = componentsToHex(color, alpha);
+    if (!opacity) textInput.value = hex.slice(0, 7);
+    else textInput.value = hex;
+    textInput.dispatchEvent(new Event("change"));
+  };
+
+  colorPickerElement.value = color;
+  alphaPickerElement.value = alpha;
+
+  colorPickerElement.addEventListener("input", (event) => {
+    const color = event.target.value;
+    const alpha = alphaPickerElement.value;
+    updateTextInput(color, alpha);
+  });
+
+  alphaPickerElement.addEventListener("input", (event) => {
+    const alpha = event.target.value;
+    const color = colorPickerElement.value;
+    updateTextInput(color, alpha);
+  });
+
+  textInput.after(colorPickerElement);
+  opacity && colorPickerElement.after(alphaPickerElement);
+}

@@ -1,3 +1,7 @@
-2025/05/07-22:48:55.074 cfd8 Recovering log #694
-2025/05/07-22:48:55.078 cfd8 Delete type=0 #694
-2025/05/07-22:48:55.078 cfd8 Delete type=3 #692
+2025/05/14-12:10:46.669 c31c Recovering log #711
+2025/05/14-12:10:46.672 c31c Delete type=0 #711
+2025/05/14-12:10:46.672 c31c Delete type=3 #710
+2025/05/14-12:23:54.382 ae0 Level-0 table #715: started
+2025/05/14-12:23:54.382 ae0 Level-0 table #715: 0 bytes OK
+2025/05/14-12:23:54.384 ae0 Delete type=0 #713
+2025/05/14-12:23:54.384 ae0 Manual compaction at level-0 from '!macros!0xkDU2f2dzJFeVj3' @ 72057594037927935 : 1 .. '!macros!Fqe8bYO5u9Izswqm' @ 0 : 0; will stop at (end)
