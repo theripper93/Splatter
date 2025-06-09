@@ -107,6 +107,13 @@ Hooks.once("init", function () {
       maxHp: "track.physical.max",
       useWounds: true,
     },
+    lancer: {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "hp.value",
+      maxHp: "hp.max",
+      useWounds: false,
+    },
   };
 
   /**************************
