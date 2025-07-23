@@ -61,10 +61,14 @@ export class BloodSplatter {
     if (colorFlag) {
       colorData = this.ColorStringToHexAlpha(colorFlag);
     }
+    let dynamicRingScaleCorrection = 1;
+    if (token.document.ring.enabled) {
+      dynamicRingScaleCorrection = 1/token.document.ring.subject.scale;
+    }
     const splatScale =
       ((Math.abs(token.document.texture.scaleX) + Math.abs(token.document.texture.scaleY))/2) *
       Math.max(token.document.width, token.document.height) *
-      extraScale;
+      extraScale * dynamicRingScaleCorrection;
     const violence = isTrail ? 1 : this.violence;
     if(!isTrail && game.Levels3DPreview?._active){
       return this.splat3D(splatScale, colorData?.color, colorData?.alpha,token, violence);
