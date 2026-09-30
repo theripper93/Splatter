@@ -114,6 +114,13 @@ Hooks.once("init", function () {
       maxHp: "hp.max",
       useWounds: false,
     },
+    cairn2e: {
+      creatureType: "",
+      creatureTypeCustom: "",
+      currentHp: "abilities.STR.value",
+      maxHp: "abilities.STR.max",
+      useWounds: false,
+    },
   };
 
   /**************************
