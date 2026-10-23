@@ -1,0 +1,13 @@
+<div>
+  <p class="hint">{{localize "splatter.bloodSheet.config.hint"}}</p>
+  {{#each rows}}
+  <div class="form-group">
+    <div class="form-fields">
+      <input type="text" data-field="type" value="{{type}}" placeholder="{{localize "splatter.bloodSheet.config.creatureType"}}">
+      <input type="text" data-field="color" value="{{color}}" placeholder="{{localize "splatter.bloodSheet.config.color"}}">
+      <button type="button" class="icon fa-solid fa-trash" data-action="removeRow" data-index="{{@index}}"
+              data-tooltip aria-label="{{localize "splatter.bloodSheet.config.removeRow"}}"></button>
+    </div>
+  </div>
+  {{/each}}
+</div>

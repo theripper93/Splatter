@@ -1,0 +1,58 @@
+<div>
+  <style>
+    .splatter-curve .splatter-curve-editor { display: grid; grid-template-columns: auto 1fr; gap: 4px; }
+    .splatter-curve .splatter-curve-y { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; }
+    .splatter-curve .splatter-curve-x { grid-column: 2; text-align: center; }
+    .splatter-curve .splatter-curve-ticks { grid-column: 2; display: flex; justify-content: space-between; }
+    .splatter-curve svg { width: 100%; aspect-ratio: 1; overflow: visible; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--color-border, #555); border-radius: 4px; touch-action: none; }
+    .splatter-curve svg .handle { stroke: rgba(255, 255, 255, 0.5); stroke-width: 0.4; stroke-dasharray: 1.5 1; }
+    .splatter-curve svg .curve { fill: none; stroke: #c81e1e; stroke-width: 1.2; }
+    .splatter-curve svg circle.point { fill: #fff; stroke: #c81e1e; stroke-width: 0.8; cursor: grab; }
+    .splatter-curve svg circle.point.end { fill: #c81e1e; stroke: #fff; }
+  </style>
+  <div class="form-group">
+    <label>{{localize "splatter.tokenBlood.config.enabled"}}</label>
+    <div class="form-fields">
+      <input type="checkbox" name="enabled" {{checked config.enabled}}>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{localize "splatter.tokenBlood.config.opacity"}}</label>
+    <div class="form-fields">
+      <range-picker name="opacity" min="0" max="1" step="0.05" value="{{config.opacity}}"></range-picker>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{localize "splatter.tokenBlood.config.splatCount"}}</label>
+    <div class="form-fields">
+      <range-picker name="splatCount" min="1" max="{{splatTextures}}" step="1" value="{{config.splatCount}}"></range-picker>
+    </div>
+    <p class="hint">{{localize "splatter.tokenBlood.config.splatCountHint"}}</p>
+  </div>
+  <div class="form-group">
+    <label>{{localize "splatter.tokenBlood.config.splatScale"}}</label>
+    <div class="form-fields">
+      <range-picker name="splatScale" min="0.25" max="4" step="0.05" value="{{config.splatScale}}"></range-picker>
+    </div>
+  </div>
+
+  <fieldset class="splatter-curve">
+    <legend>{{localize "splatter.tokenBlood.config.curve"}}</legend>
+    <p class="hint">{{localize "splatter.tokenBlood.config.curveHint"}}</p>
+    <div class="splatter-curve-editor">
+      <div class="splatter-curve-y hint">{{localize "splatter.tokenBlood.config.yAxis"}}</div>
+      <svg viewBox="0 0 100 100">
+        <line class="handle"/><line class="handle"/>
+        <path class="curve"/>
+        {{#each points}}
+        <circle class="point{{#if locked}} end{{/if}}" data-point="{{id}}" r="2.5"/>
+        {{/each}}
+      </svg>
+      <div class="splatter-curve-ticks hint"><span>0%</span><span>50%</span><span>100%</span></div>
+      <div class="splatter-curve-x hint">{{localize "splatter.tokenBlood.config.xAxis"}}</div>
+    </div>
+    <button type="button" data-action="resetCurve">
+      <i class="fa-solid fa-rotate-left" inert></i> {{localize "splatter.tokenBlood.config.resetCurve"}}
+    </button>
+  </fieldset>
+</div>

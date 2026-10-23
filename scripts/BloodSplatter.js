@@ -35,46 +35,22 @@ export class BloodSplatter {
     return sprite;
   }
 
-  SplatFromToken(token, { extraScale = 1, isTrail = false } = {}) {
-    const colorFlag = token.document.flags.splatter?.bloodColor;
-    let colorData = {};
-    if (!colorFlag && this.bloodSheet) {
-      const creatureType = this.creatureType(token);
-      let bloodSheetColor;
-      if (Array.isArray(creatureType)) {
-        creatureType.forEach((type) => {
-          if (this.bloodSheetData[type]) {
-            bloodSheetColor = this.bloodSheetData[type];
-          }
-        });
-      } else {
-        bloodSheetColor = this.bloodSheetData[creatureType];
-        if (!bloodSheetColor) {
-          const matchingKey = Object.keys(this.bloodSheetData).find((key) => creatureType.includes(key));
-          if (matchingKey) {
-            bloodSheetColor = this.bloodSheetData[matchingKey];
-          }
-        }
-      }
-      colorData = this.ColorStringToHexAlpha(bloodSheetColor);
-    }
-    if (colorFlag) {
-      colorData = this.ColorStringToHexAlpha(colorFlag);
-    }
+  SplatFromToken(token, { extraScale = 1, isTrail = false, overrideOptions = {} } = {}) {
+    const colorData = BloodSplatter.getBloodColor(token);
     const splatScale =
-      ((Math.abs(token.document.texture.scaleX) + Math.abs(token.document.texture.scaleY))/2) *
+      overrideOptions.scale ?? ((Math.abs(token.document.texture.scaleX) + Math.abs(token.document.texture.scaleY))/2) *
       Math.max(token.document.width, token.document.height) *
       extraScale;
     const violence = isTrail ? 1 : this.violence;
     if(!isTrail && game.Levels3DPreview?._active){
-      return this.splat3D(splatScale, colorData?.color, colorData?.alpha,token, violence);
+      return this.splat3D(splatScale, overrideOptions.color ?? colorData?.color, overrideOptions.alpha ?? colorData?.alpha,token, violence);
     }
     let splatContainer = new PIXI.Container();
     splatContainer.x = token.center.x;
     splatContainer.y = token.center.y;
     for (let i = 0; i < violence; i++) {
       splatContainer.addChild(
-        this.Splat(splatScale, colorData?.color, colorData?.alpha)
+        this.Splat(splatScale, overrideOptions.color ?? colorData?.color, overrideOptions.alpha ?? colorData?.alpha)
       );
     }
     if (this.wallsBlock) {
@@ -151,7 +127,7 @@ export class BloodSplatter {
   }
 
   Update() {
-    const colorData = this.ColorStringToHexAlpha(
+    const colorData = BloodSplatter.ColorStringToHexAlpha(
       game.settings.get("splatter", "bloodColor")
     );
     this.color = colorData?.color;
@@ -203,11 +179,39 @@ export class BloodSplatter {
     canvas.app.ticker.add(Animate);
   }
 
-  ColorStringToHexAlpha(colorString) {
+  static ColorStringToHexAlpha(colorString) {
     if (!colorString) return undefined;
     const color = "0x" + colorString.slice(1, 7);
-    const alpha = parseInt(colorString.slice(7), 16) / 255;
+    const alpha = colorString.length > 7 ? parseInt(colorString.slice(7, 9), 16) / 255 : 1;
     return { color: color, alpha: alpha };
+  }
+
+  static getBloodColor(token) {
+    const colorFlag = token.document.flags.splatter?.bloodColor;
+    if (colorFlag) return BloodSplatter.ColorStringToHexAlpha(colorFlag);
+    if (game.settings.get("splatter", "useBloodsheet") && token.actor) {
+      const bloodSheetData = game.settings.get("splatter", "BloodSheetData") ?? {};
+      const creatureType =
+        BloodSplatter.getCreatureTypeCustom(token.actor) || BloodSplatter.getCreatureType(token.actor);
+      let bloodSheetColor;
+      if (Array.isArray(creatureType)) {
+        creatureType.forEach((type) => {
+          if (bloodSheetData[type]) {
+            bloodSheetColor = bloodSheetData[type];
+          }
+        });
+      } else if (typeof creatureType === "string") {
+        bloodSheetColor = bloodSheetData[creatureType];
+        if (!bloodSheetColor) {
+          const matchingKey = Object.keys(bloodSheetData).find((key) => creatureType.includes(key));
+          if (matchingKey) {
+            bloodSheetColor = bloodSheetData[matchingKey];
+          }
+        }
+      }
+      if (bloodSheetColor) return BloodSplatter.ColorStringToHexAlpha(bloodSheetColor);
+    }
+    return BloodSplatter.ColorStringToHexAlpha(game.settings.get("splatter", "bloodColor"));
   }
 
   creatureType(token) {
@@ -285,17 +289,17 @@ export class BloodSplatter {
     }
   }
 
-  static socketSplatFn({uuids}) {
+  static socketSplatFn({uuids, overrideOptions}) {
     if (!game.settings.get("splatter", "enableBloodsplatter")) return;
     for (let uuid of uuids) {
       let token = fromUuidSync(uuid);
       token = token.object ?? token;
       if (!token) return;
       if (canvas.primary.BloodSplatter) {
-        canvas.primary.BloodSplatter.SplatFromToken(token);
+        canvas.primary.BloodSplatter.SplatFromToken(token, { overrideOptions });
       } else {
         new BloodSplatter();
-        canvas.primary.BloodSplatter.SplatFromToken(token);
+        canvas.primary.BloodSplatter.SplatFromToken(token, { overrideOptions });
       }
     }
   }
@@ -326,6 +330,14 @@ export class BloodSplatter {
     )
       return true;
     return false;
+  }
+  static getHealthPercent(actor) {
+    const hpMax = BloodSplatter.getHpMax(actor);
+    const hpVal = BloodSplatter.getHpVal(actor);
+    if (!hpMax || !Number.isFinite(hpVal)) return undefined;
+    const useWounds = game.settings.get("splatter", "useWounds");
+    const percent = useWounds ? (100 * (hpMax - hpVal)) / hpMax : (100 * hpVal) / hpMax;
+    return Math.clamp(percent, 0, 100);
   }
   static getHpVal(actor) {
     return foundry.utils.getProperty(
@@ -485,7 +497,7 @@ class BloodSplatterContainerManager{
   destroyAll() {
     for (const container of this.containers) {
       canvas.primary.removeChild(container);
-      container.destroy({ children: true, texture: true });
+      container.destroy({ children: true });
     }
   }
   

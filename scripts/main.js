@@ -1,5 +1,7 @@
 import { BloodSplatter } from "./BloodSplatter.js";
 import { Socket } from "./lib/socket.js";
+import { TokenBlood } from "./TokenBlood.js";
+import { registerBloodSheetConfig } from "./BloodSheetConfig.js";
 
 export const MODULE_ID = "splatter";
 
@@ -132,10 +134,10 @@ Hooks.once("init", function () {
 
   globalThis.CONFIG.Splatter = {
     clearAll: () => Socket.ClearAll(),
-    splat: (tokens) => {
+    splat: (tokens, overrideOptions = {}) => {
       if (!Array.isArray(tokens)) tokens = [tokens];
       tokens = tokens.map((t) => t.document ?? t);
-      Socket.Splat({ uuids: tokens.map((t) => t.uuid ?? t) });
+      Socket.Splat({ uuids: tokens.map((t) => t.uuid ?? t), overrideOptions });
     },
     saveBloodToTile: () => BloodSplatter.saveBlood(),
   };
@@ -162,6 +164,16 @@ Hooks.once("init", function () {
         canvas.primary.BloodSplatter.Destroy();
       }
     },
+  });
+
+  game.settings.register("splatter", "enableTokenBlood", {
+    name: game.i18n.localize("splatter.settings.enableTokenBlood.text"),
+    hint: game.i18n.localize("splatter.settings.enableTokenBlood.hint"),
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: true,
+    onChange: () => TokenBlood.refreshAll(),
   });
 
   game.settings.register("splatter", "bloodColor", {
@@ -398,6 +410,9 @@ Hooks.once("init", function () {
     type: Boolean,
     default: dataPaths[game.system.id]?.useWounds ?? false,
   });
+
+  registerBloodSheetConfig();
+  TokenBlood.register();
 });
 
 Hooks.once("ready", function () {

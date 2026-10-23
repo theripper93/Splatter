@@ -40,5 +40,39 @@
     "splatter.controls.splatToken.name":"Bloodsplat Token",
     "splatter.controls.splatToken.warn":"Please select one or more tokens",
 
-    "splatter.tokenconfig.bloodColor.name":"Blood Color"
+    "splatter.tokenconfig.bloodColor.name":"Blood Color",
+
+    "splatter.common.save": "Save Changes",
+
+    "splatter.settings.enableTokenBlood.text": "Enable Bloodied Tokens",
+    "splatter.settings.enableTokenBlood.hint": "Show blood on damaged tokens on this client. Disable for performance or if you prefer not to see it",
+
+    "splatter.tokenBlood.announce.title": "Splatter: Bloodied Tokens",
+    "splatter.tokenBlood.announce.content": "Tokens now get bloodier the more they are damaged. Configure how much blood is shown at each health level, or disable the feature, in Configure Settings → Splatter → Configure Bloodied Tokens. Each player can also turn it off for themselves with the Enable Bloodied Tokens setting.",
+
+    "splatter.tokenBlood.menu.name": "Bloodied Tokens",
+    "splatter.tokenBlood.menu.label": "Configure Bloodied Tokens",
+    "splatter.tokenBlood.menu.hint": "Cover the token image with blood, more the more damaged it is",
+    "splatter.tokenBlood.config.title": "Bloodied Tokens",
+    "splatter.tokenBlood.config.enabled": "Enabled",
+    "splatter.tokenBlood.config.opacity": "Opacity",
+    "splatter.tokenBlood.config.splatCount": "Splats",
+    "splatter.tokenBlood.config.splatCountHint": "Number of splats on a token at maximum blood amount",
+    "splatter.tokenBlood.config.splatScale": "Splat Scale",
+    "splatter.tokenBlood.config.curve": "Blood Curve",
+    "splatter.tokenBlood.config.curveHint": "Drag the points to set how much blood is shown for each missing health percentage",
+    "splatter.tokenBlood.config.xAxis": "Missing Health %",
+    "splatter.tokenBlood.config.yAxis": "Blood Amount",
+    "splatter.tokenBlood.config.resetCurve": "Reset Curve",
+
+    "splatter.bloodSheet.menu.name": "Blood Colors by Creature Type",
+    "splatter.bloodSheet.menu.label": "Configure Blood Colors",
+    "splatter.bloodSheet.menu.hint": "Blood colors used by Automatic Blood Color",
+    "splatter.bloodSheet.config.title": "Blood Colors by Creature Type",
+    "splatter.bloodSheet.config.hint": "Each creature type is matched against the actor's creature type (exact match first, then partial match)",
+    "splatter.bloodSheet.config.creatureType": "Creature Type",
+    "splatter.bloodSheet.config.color": "Color",
+    "splatter.bloodSheet.config.addRow": "Add Creature Type",
+    "splatter.bloodSheet.config.removeRow": "Remove",
+    "splatter.bloodSheet.config.resetDefaults": "Reset to Defaults"
 }
