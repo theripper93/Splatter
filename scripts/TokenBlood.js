@@ -250,6 +250,16 @@ class TokenBloodOverlay extends PIXI.Container {
     this._updateSplats();
   }
 
+  render(renderer) {
+    // workaround for voidMesh rendering mesh over primary group in ERASE blending. Not sure why Foundry rerenders children too, but it does.
+    const mesh = this.parent;
+    const erase = PIXI.BLEND_MODES.ERASE;
+    if (mesh?.blendMode === erase) return;
+    const filterState = renderer.filter.defaultFilterStack.at(-1);
+    if (filterState?.target === mesh && filterState.filters.at(-1)?.blendMode === erase) return;
+    super.render(renderer);
+  }
+
   sync() {
     const token = this.token;
     const mesh = token.mesh;
