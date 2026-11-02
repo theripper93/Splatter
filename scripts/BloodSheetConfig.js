@@ -31,6 +31,7 @@ class BloodSheetConfig extends HandlebarsApplicationMixin(ApplicationV2) {
     actions: {
       addRow: BloodSheetConfig._onAddRow,
       removeRow: BloodSheetConfig._onRemoveRow,
+      moveRow: BloodSheetConfig._onMoveRow,
       resetDefaults: BloodSheetConfig._onResetDefaults,
     },
   };
@@ -88,6 +89,15 @@ class BloodSheetConfig extends HandlebarsApplicationMixin(ApplicationV2) {
   static _onRemoveRow(event, target) {
     this.rows = this._readRows();
     this.rows.splice(Number(target.dataset.index), 1);
+    this.render();
+  }
+
+  static _onMoveRow(event, target) {
+    this.rows = this._readRows();
+    const from = Number(target.dataset.index);
+    const to = from + Number(target.dataset.direction);
+    if (to < 0 || to >= this.rows.length) return;
+    [this.rows[from], this.rows[to]] = [this.rows[to], this.rows[from]];
     this.render();
   }
 

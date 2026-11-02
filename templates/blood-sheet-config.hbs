@@ -5,6 +5,10 @@
     <div class="form-fields">
       <input type="text" data-field="type" value="{{type}}" placeholder="{{localize "splatter.bloodSheet.config.creatureType"}}">
       <input type="text" data-field="color" value="{{color}}" placeholder="{{localize "splatter.bloodSheet.config.color"}}">
+      <button type="button" class="icon fa-solid fa-arrow-up" data-action="moveRow" data-index="{{@index}}" data-direction="-1"
+              {{#if @first}}disabled{{/if}} data-tooltip aria-label="{{localize "splatter.bloodSheet.config.moveUp"}}"></button>
+      <button type="button" class="icon fa-solid fa-arrow-down" data-action="moveRow" data-index="{{@index}}" data-direction="1"
+              {{#if @last}}disabled{{/if}} data-tooltip aria-label="{{localize "splatter.bloodSheet.config.moveDown"}}"></button>
       <button type="button" class="icon fa-solid fa-trash" data-action="removeRow" data-index="{{@index}}"
               data-tooltip aria-label="{{localize "splatter.bloodSheet.config.removeRow"}}"></button>
     </div>

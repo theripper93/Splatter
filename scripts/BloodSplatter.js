@@ -195,11 +195,8 @@ export class BloodSplatter {
         BloodSplatter.getCreatureTypeCustom(token.actor) || BloodSplatter.getCreatureType(token.actor);
       let bloodSheetColor;
       if (Array.isArray(creatureType)) {
-        creatureType.forEach((type) => {
-          if (bloodSheetData[type]) {
-            bloodSheetColor = bloodSheetData[type];
-          }
-        });
+        const matchingKey = Object.keys(bloodSheetData).find((key) => creatureType.includes(key));
+        if (matchingKey) bloodSheetColor = bloodSheetData[matchingKey];
       } else if (typeof creatureType === "string") {
         bloodSheetColor = bloodSheetData[creatureType];
         if (!bloodSheetColor) {
