@@ -11,13 +11,13 @@
     "splatter.settings.useBloodsheet.text":"Automatic Blood Color",
     "splatter.settings.useBloodsheet.hint":"Change blood color depending on creature type",
     "splatter.settings.currentHp.text":"Current HP",
-    "splatter.settings.currentHp.hint":"Data path for an actor's current hp",
+    "splatter.settings.currentHp.hint":"Data path for an actor's current hp. Only used when the game system is not supported by System Abstraction",
     "splatter.settings.maxHp.text":"Max HP",
-    "splatter.settings.maxHp.hint":"Data path for an actor's max hp",
+    "splatter.settings.maxHp.hint":"Data path for an actor's max hp. Only used when the game system is not supported by System Abstraction",
     "splatter.settings.creatureType.text":"Creature Type",
-    "splatter.settings.creatureType.hint":"Data path for an actor's creature type",
+    "splatter.settings.creatureType.hint":"Data path for an actor's creature type. Only used when the game system is not supported by System Abstraction",
     "splatter.settings.creatureTypeCustom.text":"Custom Creature Type",
-    "splatter.settings.creatureTypeCustom.hint":"Data path for an actor's custom creature type",
+    "splatter.settings.creatureTypeCustom.hint":"Data path for an actor's custom creature type. Only used when the game system is not supported by System Abstraction",
     "splatter.settings.enableBloodTrail.text":"Blood Trail",
     "splatter.settings.enableBloodTrail.hint":"Display a trail of blood behind the token",
     "splatter.settings.violence.text":"Violence Level",
@@ -34,7 +34,7 @@
     "splatter.settings.syncWithAA.hint": "Sync Bloodsplats with Automated Animations (requires midi-qol automatic damage application)",
 
     "splatter.settings.useWounds.text": "Wounds System",
-    "splatter.settings.useWounds.hint": "Enable on systems that use Wounds (e.g. SWADE, SotDL and other similar systems)",
+    "splatter.settings.useWounds.hint": "Enable on systems that use Wounds (e.g. SWADE, SotDL and other similar systems). Only used when the game system is not supported by System Abstraction",
 
     "splatter.controls.clearBlood.name":"Clear Blood",
     "splatter.controls.splatToken.name":"Bloodsplat Token",
@@ -76,5 +76,8 @@
     "splatter.bloodSheet.config.color": "Color",
     "splatter.bloodSheet.config.addRow": "Add Creature Type",
     "splatter.bloodSheet.config.removeRow": "Remove",
-    "splatter.bloodSheet.config.resetDefaults": "Reset to Defaults"
+    "splatter.bloodSheet.config.resetDefaults": "Reset to Defaults",
+    "splatter.bloodSheet.config.availableTypes": "Known Creature Types",
+    "splatter.bloodSheet.config.addMissingTypes": "Add Missing Types",
+    "splatter.bloodSheet.config.noTypes": "No creature types found for this game system or the actors in this world."
 }

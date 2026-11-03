@@ -2,128 +2,12 @@ import { BloodSplatter } from "./BloodSplatter.js";
 import { Socket } from "./lib/socket.js";
 import { TokenBlood } from "./TokenBlood.js";
 import { registerBloodSheetConfig } from "./BloodSheetConfig.js";
+import { SystemAdapter, LEGACY_DATA_PATHS, LEGACY_SETTINGS } from "./SystemAdapter.js";
 
 export const MODULE_ID = "splatter";
 
 Hooks.once("init", function () {
-  /**************************
-   * SPLATTER DATA PATHS *
-   **************************/
-
-  const dataPaths = {
-    dnd5e: {
-      creatureType: "details.type.value",
-      creatureTypeCustom: "details.type.custom",
-      currentHp: "attributes.hp.value",
-      maxHp: "attributes.hp.max",
-      useWounds: false,
-    },
-    pf1e: {
-      creatureType: "details.type.value",
-      creatureTypeCustom: "details.type.custom",
-      currentHp: "attributes.hp.value",
-      maxHp: "attributes.hp.max",
-      useWounds: false,
-    },
-    pf2e: {
-      creatureType: "traits.value",
-      creatureTypeCustom: "",
-      currentHp: "attributes.hp.value",
-      maxHp: "attributes.hp.max",
-      useWounds: false,
-    },
-    sw5e: {
-      creatureType: "details.type.value",
-      creatureTypeCustom: "details.type.custom",
-      currentHp: "attributes.hp.value",
-      maxHp: "attributes.hp.max",
-      useWounds: false,
-    },
-    alienrpg: {
-      creatureType: "",
-      creatureTypeCustom: "",
-      currentHp: "header.health.value",
-      maxHp: "header.health.max",
-      useWounds: false,
-    },
-    yzecoriolis: {
-      creatureType: "",
-      creatureTypeCustom: "",
-      currentHp: "hitPoints.value",
-      maxHp: "hitPoints.max",
-      useWounds: false,
-    },
-    swade: {
-      creatureType: "",
-      creatureTypeCustom: "",
-      currentHp: "wounds.value",
-      maxHp: "wounds.max",
-      useWounds: true,
-    },
-    ds4: {
-      creatureType: "baseInfo.creatureType",
-      creatureTypeCustom: "",
-      currentHp: "combatValues.hitPoints.value",
-      maxHp: "combatValues.hitPoints.max",
-      useWounds: false,
-    },
-    "cyberpunk-red-core": {
-      creatureType: "",
-      creatureTypeCustom: "",
-      currentHp: "derivedStats.hp.value",
-      maxHp: "derivedStats.hp.max",
-      useWounds: false,
-    },
-    demonlord: {
-      creatureType: "",
-      creatureTypeCustom: "",
-      currentHp: "characteristics.health.value",
-      maxHp: "characteristics.health.max",
-      useWounds: true,
-    },
-    avd12: {
-      creatureType: "creature_type",
-      creatureTypeCustom: "",
-      currentHp: "health.value",
-      maxHp: "health.max",
-      useWounds: false,
-    },
-    wfrp4e: {
-      creatureType: "details.species.value",
-      creatureTypeCustom: "",
-      currentHp: "status.wounds.value",
-      maxHp: "status.wounds.max",
-      useWounds: false,
-    },
-    deltagreen: {
-      creatureType: "",
-      creatureTypeCustom: "",
-      currentHp: "health.value",
-      maxHp: "health.max",
-      useWounds: false,
-    },
-    shadowrun5e: {
-      creatureType: "",
-      creatureTypeCustom: "",
-      currentHp: "track.physical.value",
-      maxHp: "track.physical.max",
-      useWounds: true,
-    },
-    lancer: {
-      creatureType: "",
-      creatureTypeCustom: "",
-      currentHp: "hp.value",
-      maxHp: "hp.max",
-      useWounds: false,
-    },
-    cairn2e: {
-      creatureType: "",
-      creatureTypeCustom: "",
-      currentHp: "abilities.STR.value",
-      maxHp: "abilities.STR.max",
-      useWounds: false,
-    },
-  };
+  const dataPaths = LEGACY_DATA_PATHS;
 
   /**************************
    * BLOODSPLATTER SETTINGS *
@@ -415,8 +299,10 @@ Hooks.once("init", function () {
   TokenBlood.register();
 });
 
-Hooks.once("ready", function () {
+Hooks.once("ready", async function () {
   canvas.app.ticker.add(BloodSplatter.bloodTrailTicker);
+  await SystemAdapter.init();
+  TokenBlood.refreshAll();
 });
 
 const renderTokenConfig = (app, html, data) => {
@@ -470,22 +356,20 @@ Hooks.on("getSceneControlButtons", (controls, b, c) => {
   };
 });
 
-Hooks.on("preUpdateActor", function (actor, updates, diff) {
-  diff.oldHpVal = BloodSplatter.getHpVal(actor);
+Hooks.on("preUpdateActor", function (actor, updates, options) {
+  options.splatterOldHealth = BloodSplatter.getHealthPercent(actor);
 });
 
-Hooks.on("updateActor", function (actor, updates, diff) {
+Hooks.on("updateActor", function (actor, updates, options) {
   if (
     !game.settings.get("splatter", "enableBloodsplatter") ||
     (game.settings.get("splatter", "onlyInCombat") && !game.combat?.started)
   )
     return;
-  let token = actor.parent
-    ? canvas.tokens.get(actor.parent.id)
-    : canvas.tokens.placeables.find((t) => t.actor?.id == actor.id);
-  if (!token) return;
-  const impactScale = BloodSplatter.getImpactScale(actor, updates, diff);
-  if (impactScale) BloodSplatter.executeSplat(token, impactScale);
+  const tokens = actor.getActiveTokens(true);
+  if (!tokens.length) return;
+  const impactScale = BloodSplatter.getImpactScale(actor, options.splatterOldHealth);
+  if (impactScale) tokens.forEach((token) => BloodSplatter.executeSplat(token, impactScale));
 });
 
 Hooks.on("canvasReady", function () {
@@ -494,6 +378,11 @@ Hooks.on("canvasReady", function () {
 
 Hooks.on("renderSettingsConfig", (app, html, data) => {
   addColorPicker(html.querySelector(`[name="splatter.bloodColor"]`), {opacity: true});
+  if (SystemAdapter.usesRSA) {
+    for (const key of LEGACY_SETTINGS) {
+      html.querySelector(`[name="splatter.${key}"]`)?.closest(".form-group")?.remove();
+    }
+  }
 });
 
 export function addColorPicker(input, {value, opacity = false } = {}) {

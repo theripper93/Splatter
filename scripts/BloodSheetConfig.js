@@ -1,4 +1,5 @@
 import { addColorPicker } from "./main.js";
+import { SystemAdapter } from "./SystemAdapter.js";
 
 export function registerBloodSheetConfig() {
   game.settings.registerMenu("splatter", "bloodSheetMenu", {
@@ -30,6 +31,7 @@ class BloodSheetConfig extends HandlebarsApplicationMixin(ApplicationV2) {
     },
     actions: {
       addRow: BloodSheetConfig._onAddRow,
+      addMissingTypes: BloodSheetConfig._onAddMissingTypes,
       removeRow: BloodSheetConfig._onRemoveRow,
       moveRow: BloodSheetConfig._onMoveRow,
       resetDefaults: BloodSheetConfig._onResetDefaults,
@@ -50,8 +52,12 @@ class BloodSheetConfig extends HandlebarsApplicationMixin(ApplicationV2) {
   rows = Object.entries(game.settings.get("splatter", "BloodSheetData") ?? {}).map(([type, color]) => ({ type, color }));
 
   async _prepareContext() {
+    const creatureTypes = SystemAdapter.getAllCreatureTypes();
+    const listed = new Set(this.rows.map((row) => row.type));
     return {
       rows: this.rows,
+      creatureTypes: creatureTypes.join(", "),
+      hasMissingTypes: creatureTypes.some((type) => !listed.has(type)),
       buttons: [
         { type: "submit", icon: "fa-solid fa-save", label: "splatter.common.save" },
         { type: "button", icon: "fa-solid fa-plus", label: "splatter.bloodSheet.config.addRow", action: "addRow" },
@@ -73,7 +79,7 @@ class BloodSheetConfig extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   _readRows() {
-    return [...this.element.querySelectorAll(".form-group")].map((row) => ({
+    return [...this.element.querySelectorAll(".form-group[data-row]")].map((row) => ({
       type: row.querySelector('[data-field="type"]').value.trim(),
       color: row.querySelector('[data-field="color"]').value.trim(),
     }));
@@ -84,6 +90,15 @@ class BloodSheetConfig extends HandlebarsApplicationMixin(ApplicationV2) {
     await this.render();
     const inputs = this.element.querySelectorAll('input[data-field="type"]');
     inputs[inputs.length - 1]?.focus();
+  }
+
+  static _onAddMissingTypes() {
+    const rows = this._readRows();
+    const listed = new Set(rows.map((row) => row.type));
+    const color = game.settings.get("splatter", "bloodColor");
+    const missing = SystemAdapter.getAllCreatureTypes().filter((type) => !listed.has(type));
+    this.rows = [...rows, ...missing.map((type) => ({ type, color }))];
+    this.render();
   }
 
   static _onRemoveRow(event, target) {
