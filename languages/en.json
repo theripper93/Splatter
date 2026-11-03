@@ -79,5 +79,8 @@
     "splatter.bloodSheet.config.resetDefaults": "Reset to Defaults",
     "splatter.bloodSheet.config.availableTypes": "Known Creature Types",
     "splatter.bloodSheet.config.addMissingTypes": "Add Missing Types",
-    "splatter.bloodSheet.config.noTypes": "No creature types found for this game system or the actors in this world."
+    "splatter.bloodSheet.config.noTypes": "No creature types found for this game system or the actors in this world.",
+    "splatter.rsaRequired.title": "Splatter: Dependency Required",
+    "splatter.rsaRequired.content": "Splatter requires the <strong>Ripper's System Abstraction</strong> module, which is installed but not enabled. It will now be enabled and the page will reload.",
+    "splatter.rsaRequired.confirm": "Enable and Reload"
 }

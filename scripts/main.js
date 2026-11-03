@@ -2,7 +2,7 @@ import { BloodSplatter } from "./BloodSplatter.js";
 import { Socket } from "./lib/socket.js";
 import { TokenBlood } from "./TokenBlood.js";
 import { registerBloodSheetConfig } from "./BloodSheetConfig.js";
-import { SystemAdapter, LEGACY_DATA_PATHS, LEGACY_SETTINGS } from "./SystemAdapter.js";
+import { SystemAdapter, LEGACY_DATA_PATHS, LEGACY_SETTINGS, RSA_ID } from "./SystemAdapter.js";
 
 export const MODULE_ID = "splatter";
 
@@ -299,7 +299,25 @@ Hooks.once("init", function () {
   TokenBlood.register();
 });
 
+async function ensureRSAEnabled() {
+  const rsaModule = game.modules.get(RSA_ID);
+  if (!rsaModule || rsaModule.active || !game.user.isGM) return;
+  const confirmed = await foundry.applications.api.DialogV2.prompt({
+    window: { title: game.i18n.localize("splatter.rsaRequired.title") },
+    content: `<p>${game.i18n.localize("splatter.rsaRequired.content")}</p>`,
+    ok: { label: game.i18n.localize("splatter.rsaRequired.confirm"), icon: "fas fa-check" },
+    rejectClose: false,
+  });
+  if (!confirmed) return;
+  const SETTING = foundry.applications.sidebar.apps.ModuleManagement.SETTING;
+  const config = game.settings.get("core", SETTING);
+  config[RSA_ID] = true;
+  await game.settings.set("core", SETTING, config);
+  foundry.utils.debouncedReload();
+}
+
 Hooks.once("ready", async function () {
+  ensureRSAEnabled();
   canvas.app.ticker.add(BloodSplatter.bloodTrailTicker);
   await SystemAdapter.init();
   TokenBlood.refreshAll();
