@@ -191,20 +191,15 @@ export class BloodSplatter {
     if (colorFlag) return BloodSplatter.ColorStringToHexAlpha(colorFlag);
     if (game.settings.get("splatter", "useBloodsheet") && token.actor) {
       const bloodSheetData = game.settings.get("splatter", "BloodSheetData") ?? {};
-      const creatureType =
-        BloodSplatter.getCreatureTypeCustom(token.actor) || BloodSplatter.getCreatureType(token.actor);
-      let bloodSheetColor;
-      if (Array.isArray(creatureType)) {
-        const matchingKey = Object.keys(bloodSheetData).find((key) => creatureType.includes(key));
-        if (matchingKey) bloodSheetColor = bloodSheetData[matchingKey];
-      } else if (typeof creatureType === "string") {
-        bloodSheetColor = bloodSheetData[creatureType];
-        if (!bloodSheetColor) {
-          const matchingKey = Object.keys(bloodSheetData).find((key) => creatureType.includes(key));
-          if (matchingKey) {
-            bloodSheetColor = bloodSheetData[matchingKey];
-          }
-        }
+      const creatureTypes = BloodSplatter.getCreatureTypes(token.actor);
+      const bloodSheetKeys = Object.keys(bloodSheetData);
+      let matchingKey = bloodSheetKeys.find((key) => creatureTypes.includes(key));
+      let bloodSheetColor = matchingKey ? bloodSheetData[matchingKey] : undefined;
+      if (!bloodSheetColor) {
+        matchingKey = bloodSheetKeys.find((key) =>
+          creatureTypes.some((type) => typeof type === "string" && type.includes(key))
+        );
+        bloodSheetColor = matchingKey ? bloodSheetData[matchingKey] : undefined;
       }
       if (bloodSheetColor) return BloodSplatter.ColorStringToHexAlpha(bloodSheetColor);
     }
@@ -212,10 +207,7 @@ export class BloodSplatter {
   }
 
   creatureType(token) {
-    return (
-      BloodSplatter.getCreatureTypeCustom(token.actor) ||
-      BloodSplatter.getCreatureType(token.actor)
-    );
+    return BloodSplatter.getCreatureTypes(token.actor);
   }
 
   static getMask(origin, radius){
@@ -353,6 +345,11 @@ export class BloodSplatter {
       actorData.system,
       game.settings.get("splatter", "creatureTypeCustom")
     );
+  }
+  static getCreatureTypes(actorData) {
+    return [BloodSplatter.getCreatureTypeCustom(actorData), BloodSplatter.getCreatureType(actorData)]
+      .flatMap((creatureType) => (Array.isArray(creatureType) ? creatureType : [creatureType]))
+      .filter((creatureType) => creatureType != null && creatureType !== "");
   }
   static async saveBlood() {
     const bgElev = canvas.primary.background.elevation;

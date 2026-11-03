@@ -1,34 +1,34 @@
 {
-  "id": "splatter",
-  "title": "Splatter",
-  "description": "Blood up your games",
-  "version": "0.1",
-  "authors": [
-    {
-      "name": "theripper93",
-      "email": "tsplab@gmail.com",
-      "url": "https://www.patreon.com/theripper93"
+    "id": "splatter",
+    "title": "Splatter",
+    "description": "Blood up your games",
+    "version": "7.0.2",
+    "authors": [
+        {
+            "name": "theripper93",
+            "email": "tsplab@gmail.com",
+            "url": "https://www.patreon.com/theripper93"
+        }
+    ],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "languages/en.json"
+        }
+    ],
+    "esmodules": [
+        "scripts/main.js"
+    ],
+    "packs": [],
+    "url": "https://github.com/theripper93/Splatter",
+    "manifest": "https://github.com/theripper93/Splatter/releases/latest/download/module.json",
+    "download": "https://github.com/theripper93/Splatter/releases/download/7.0.2/module.zip",
+    "socket": true,
+    "relationships": {},
+    "compatibility": {
+        "minimum": "14",
+        "verified": "14",
+        "maximum": "14"
     }
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "languages/en.json"
-    }
-  ],
-  "esmodules": [
-    "scripts/main.js"
-  ],
-  "packs": [],
-  "url": "https://github.com/theripper93/Splatter",
-  "manifest": "https://github.com/theripper93/Splatter/releases/latest/download/module.json",
-  "download": "https://github.com/theripper93/Splatter/releases/latest/download/module.zip",
-  "socket": true,
-  "relationships": {},
-  "compatibility": {
-    "minimum": "14",
-    "verified": "14",
-    "maximum": "14"
-  }
 }
