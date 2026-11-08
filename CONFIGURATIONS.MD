@@ -10,7 +10,7 @@ Copy the settings from the tale, then execute the macro inside your Foundry to a
 | Current HP           | attributes.hp.value |
 | Max HP               | attributes.hp.max   |
 
-2. Script macro to set default colors. (Remember that *Automatic Blood Color* must be enabled in the module's settings.) Based on data taken 2025/08/17
+2. Script macro to set default colors. (Remember that *Automatic Blood Color* must be enabled in the module's settings.)
 
 ```js
 const BloodSheetData = {
