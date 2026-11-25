@@ -2,11 +2,12 @@ import { BloodSplatter } from "./BloodSplatter.js";
 import { Socket } from "./lib/socket.js";
 import { TokenBlood } from "./TokenBlood.js";
 import { registerBloodSheetConfig } from "./BloodSheetConfig.js";
-import { SystemAdapter, LEGACY_DATA_PATHS, LEGACY_SETTINGS, RSA_ID } from "./SystemAdapter.js";
+import { SystemAdapter, LEGACY_DATA_PATHS, LEGACY_SETTINGS, RSA_ID, registerRsaRequirements } from "./SystemAdapter.js";
 
 export const MODULE_ID = "splatter";
 
 Hooks.once("init", function () {
+  registerRsaRequirements();
   const dataPaths = LEGACY_DATA_PATHS;
 
   /**************************

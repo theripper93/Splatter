@@ -82,5 +82,7 @@
     "splatter.bloodSheet.config.noTypes": "No creature types found for this game system or the actors in this world.",
     "splatter.rsaRequired.title": "Splatter: Dependency Required",
     "splatter.rsaRequired.content": "Splatter requires the <strong>Ripper's System Abstraction</strong> module, which is installed but not enabled. It will now be enabled and the page will reload.",
-    "splatter.rsaRequired.confirm": "Enable and Reload"
+    "splatter.rsaRequired.confirm": "Enable and Reload",
+    "splatter.rsaRequirements.health": "blood on damage",
+    "splatter.rsaRequirements.creatureType": "blood colour by creature type"
 }

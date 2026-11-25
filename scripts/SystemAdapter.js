@@ -68,6 +68,15 @@ export const LEGACY_DATA_PATHS = {
 
 export const LEGACY_SETTINGS = ["creatureType", "creatureTypeCustom", "currentHp", "maxHp", "useWounds"];
 
+export function registerRsaRequirements() {
+  const reason = (key) => game.i18n.localize(`splatter.rsaRequirements.${key}`);
+  Hooks.once(`${RSA_ID}.registerRequirements`, (requirements) => requirements.register("splatter", [
+    { id: "health.current", reason: reason("health") },
+    { id: "health.maximum", reason: reason("health") },
+    { id: "actor.type", optional: true, reason: reason("creatureType") },
+  ]));
+}
+
 let rsa = null;
 let ready = false;
 
